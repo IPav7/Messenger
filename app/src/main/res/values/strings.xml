@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Messenger</string>
+    <string name="URL">http://192.168.137.1:8080/</string>
+    <string name="signin_username">Login</string>
+    <string name="signin_password">Password</string>
+    <string name="signin_signup">Sign up</string>
+    <string name="signin_signin">Sign in</string>
+    <string name="signup_name">Name</string>
+    <string name="signup_surname">Surname</string>
+</resources>
