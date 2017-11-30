@@ -68,14 +68,9 @@ public class MessagesActivity extends Activity {
     String returned = "no returnde";
 
     class HttpConnect extends AsyncTask<String, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            Toast.makeText(MessagesActivity.this, "pre " + CookiesWork.cookie, Toast.LENGTH_SHORT).show();
-        }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(MessagesActivity.this, returned, Toast.LENGTH_SHORT).show();
             if(returned.equals("No access"))
                 startActivity(new Intent(MessagesActivity.this, SignIn_Activity.class));
             }

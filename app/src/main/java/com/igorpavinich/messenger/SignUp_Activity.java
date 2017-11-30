@@ -47,7 +47,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
             imageView.setImageURI(data.getData());
         }
         else
-            Toast.makeText(SignUp_Activity.this, "Open photo error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignUp_Activity.this, "Фото не загружено", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -81,7 +81,6 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
     class SendProfile extends AsyncTask<String, Void, Void> {
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(SignUp_Activity.this, "code send: " + code, Toast.LENGTH_SHORT).show();
             if(code == HttpURLConnection.HTTP_OK) {
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
                 startActivity(new Intent(SignUp_Activity.this, MessagesActivity.class));
@@ -114,10 +113,6 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
     }
 
     class PostImage extends AsyncTask<Bitmap, Void, Void> {
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            Toast.makeText(SignUp_Activity.this, "code pic: " + code, Toast.LENGTH_SHORT).show();
-        }
 
         @Override
         protected Void doInBackground(Bitmap... params) {
@@ -131,7 +126,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestProperty("Content-Type", "application/octet-stream");
                 connection.setRequestProperty("charset", "utf-8");
                 connection.setRequestProperty("Content-Length", Integer.toString(byteArray.length));
                 DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
