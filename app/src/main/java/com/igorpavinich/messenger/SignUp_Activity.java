@@ -7,6 +7,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,10 @@ import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+
+import static com.igorpavinich.messenger.CheckInput.checkLogin;
+import static com.igorpavinich.messenger.CheckInput.checkName;
+import static com.igorpavinich.messenger.CheckInput.checkPassword;
 
 public class SignUp_Activity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,7 +42,12 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
         etSurname = findViewById(R.id.signup_surname);
         etLogin = findViewById(R.id.signup_username);
         etPassword = findViewById(R.id.signup_password);
+        etName.addTextChangedListener(textWatcher);
+        etSurname.addTextChangedListener(textWatcher);
+        etLogin.addTextChangedListener(textWatcher);
+        etPassword.addTextChangedListener(textWatcher);
         bSignUp.setOnClickListener(this);
+        bSignUp.setEnabled(false);
         bSignIn.setOnClickListener(this);
         imageView.setOnClickListener(this);
     }
@@ -115,6 +126,12 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
     class PostImage extends AsyncTask<Bitmap, Void, Void> {
 
         @Override
+        protected void onPostExecute(Void aVoid) {
+            if(code == HttpURLConnection.HTTP_NOT_FOUND)
+                Toast.makeText(SignUp_Activity.this, "Ошибка загрузки изображения", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
         protected Void doInBackground(Bitmap... params) {
             HttpURLConnection connection = null;
             URL url;
@@ -146,6 +163,25 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if(checkLogin(etLogin.getText().toString()) && checkPassword(etPassword.getText().toString()) &&
+               checkName(etName.getText().toString()) && checkName(etSurname.getText().toString()))
+                bSignUp.setEnabled(true);
+            else bSignUp.setEnabled(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
 
 
 }

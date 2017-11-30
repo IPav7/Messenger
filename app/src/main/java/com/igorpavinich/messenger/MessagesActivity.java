@@ -1,37 +1,34 @@
 package com.igorpavinich.messenger;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.CookieManager;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-public class MessagesActivity extends Activity {
+public class MessagesActivity extends AppCompatActivity {
 
-    Button button;
+    ListView listView;
+    ArrayList<Dialog> dialogs;
+    DialogsAdapter adapter;
+    SearchView searchView;
+    ImageView imgSearch, imgMsg, imgProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +36,7 @@ public class MessagesActivity extends Activity {
         setContentView(R.layout.activity_messages);
         CookiesWork.loadCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
         new HttpConnect().execute();
-        button = findViewById(R.id.mesButton);
+       /* button = findViewById(R.id.mesButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,8 +44,35 @@ public class MessagesActivity extends Activity {
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
                 startActivity(new Intent(MessagesActivity.this, SignIn_Activity.class));
             }
-        });
+        });*/
+        listView = findViewById(R.id.dialogsList);
+        dialogs = new ArrayList<>();
+        adapter = new DialogsAdapter(this, dialogs);
+        listView.setAdapter(adapter);
+        imgSearch = findViewById(R.id.imgSearch);
+        imgMsg = findViewById(R.id.imgMsg);
+        imgProfile = findViewById(R.id.imgProfile);
+        imgMsg.setOnClickListener(imgClickListener);
+        imgProfile.setOnClickListener(imgClickListener);
+        imgSearch.setOnClickListener(imgClickListener);
     }
+
+    View.OnClickListener imgClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.imgMsg:
+                    loadMessages();
+                    break;
+                case R.id.imgProfile:
+                    startActivity(new Intent(MessagesActivity.this, ProfileActivity.class));
+                    break;
+                case R.id.imgSearch:
+                    startActivity(new Intent(MessagesActivity.this, SearchActivity.class));
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -65,14 +89,17 @@ public class MessagesActivity extends Activity {
         super.onStop();
     }
 
-    String returned = "no returnde";
+    int code;
 
     class HttpConnect extends AsyncTask<String, Void, Void> {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if(returned.equals("No access"))
+            if(code == HttpURLConnection.HTTP_OK)
+                loadMessages();
+            else if(code == HttpURLConnection.HTTP_NOT_FOUND)
                 startActivity(new Intent(MessagesActivity.this, SignIn_Activity.class));
+            else Toast.makeText(MessagesActivity.this, "Ошибка соединения с сервером", Toast.LENGTH_SHORT).show();
             }
 
         @Override
@@ -84,9 +111,7 @@ public class MessagesActivity extends Activity {
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                returned = in.readLine();
-                in.close();
+                code = connection.getResponseCode();
             }
             catch (Exception e){
             }
@@ -96,6 +121,34 @@ public class MessagesActivity extends Activity {
             }
             return null;
         }
+    }
+
+    private void loadMessages() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        dialogs.add(new Dialog("Igor", "Pavinich", "pidor", format.format(new Date())));
+        dialogs.add(new Dialog("Evg", "Kuril", "sam", format.format(new Date())));
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView)item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return true;
     }
 
 }

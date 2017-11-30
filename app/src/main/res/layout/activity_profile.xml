@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.igorpavinich.messenger.MessagesActivity">
-    
+    tools:context="com.igorpavinich.messenger.ProfileActivity">
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/dialogsList"/>
-    
+        android:layout_weight="1"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -20,8 +20,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="24dp"
-            android:id="@+id/imgSearch"
             android:layout_gravity="center"
+            android:id="@+id/imgSearch"
             android:src="@drawable/ic_search_black_24dp"/>
         <ImageView
             android:layout_width="0dp"
@@ -29,14 +29,14 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:id="@+id/imgMsg"
-            android:src="@drawable/ic_message_green_24dp"/>
+            android:src="@drawable/ic_message_black_24dp"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:id="@+id/imgProfile"
-            android:src="@drawable/ic_account_box_black_24dp"/>
+            android:src="@drawable/ic_account_box_green_24dp"/>
     </LinearLayout>
 
 </LinearLayout>

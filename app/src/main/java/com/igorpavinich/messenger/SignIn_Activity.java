@@ -2,18 +2,21 @@ package com.igorpavinich.messenger;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+
+import static com.igorpavinich.messenger.CheckInput.checkLogin;
+import static com.igorpavinich.messenger.CheckInput.checkPassword;
 
 public class SignIn_Activity extends Activity {
 
@@ -27,8 +30,11 @@ public class SignIn_Activity extends Activity {
         setContentView(R.layout.activity_sign_in);
         etLogin = findViewById(R.id.signin_username);
         etPassword = findViewById(R.id.signin_password);
+        etLogin.addTextChangedListener(textWatcher);
+        etPassword.addTextChangedListener(textWatcher);
         cookieManager = new CookieManager();
         bSignIn = findViewById(R.id.signin_bSignIn);
+        bSignIn.setEnabled(false);
         bSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,5 +107,24 @@ public class SignIn_Activity extends Activity {
             return null;
         }
     }
+
+    TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if(checkLogin(etLogin.getText().toString()) && checkPassword(etPassword.getText().toString()))
+                bSignIn.setEnabled(true);
+            else bSignIn.setEnabled(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
 
 }
