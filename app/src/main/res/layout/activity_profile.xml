@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.igorpavinich.messenger.ProfileActivity">
 
@@ -10,13 +11,25 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/llName">
         <ImageView
             android:layout_width="match_parent"
-            android:layout_above="@+id/llName"
             android:id="@+id/profileImg"
-            android:src="@drawable/anonimg"
             android:scaleType="centerCrop"
             android:layout_height="match_parent" />
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fab"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                app:rippleColor="@color/colorPrimary"/>
+        </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"

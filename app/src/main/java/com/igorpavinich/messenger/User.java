@@ -1,5 +1,7 @@
 package com.igorpavinich.messenger;
 
+import android.graphics.Bitmap;
+
 import java.io.InputStream;
 
 /**
@@ -12,7 +14,7 @@ public class User {
     private String password;
     private String name;
     private String surname;
-    private InputStream picture;
+    private Bitmap picture;
 
     public User() {
     }
@@ -28,7 +30,7 @@ public class User {
         this.password = password;
     }
 
-    public User(String login, String password, String name, String surname, InputStream picture) {
+    public User(String login, String name, String surname) {
         this.login = login;
         this.password = password;
         this.name = name;
@@ -44,7 +46,7 @@ public class User {
         this.surname = surname;
     }
 
-    public void setPicture(InputStream picture) {
+    public void setPicture(Bitmap picture) {
         this.picture = picture;
     }
 
@@ -56,7 +58,7 @@ public class User {
         return surname;
     }
 
-    public InputStream getPicture() {
+    public Bitmap getPicture() {
         return picture;
     }
 
@@ -66,9 +68,6 @@ public class User {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", picture=" + picture +
                 '}';
     }
 

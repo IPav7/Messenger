@@ -11,11 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -36,15 +31,6 @@ public class MessagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messages);
         CookiesWork.loadCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
         new HttpConnect().execute();
-       /* button = findViewById(R.id.mesButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CookiesWork.cookie = "";
-                CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
-                startActivity(new Intent(MessagesActivity.this, SignIn_Activity.class));
-            }
-        });*/
         listView = findViewById(R.id.dialogsList);
         listView.setOnTouchListener(new OnSwipeListener(MessagesActivity.this){
             @Override
