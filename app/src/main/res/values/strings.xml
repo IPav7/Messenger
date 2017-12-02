@@ -8,4 +8,7 @@
     <string name="signup_name">Name</string>
     <string name="signup_surname">Surname</string>
     <string name="srch">Поиск</string>
+    <string name="login">LOGIN</string>
+    <string name="surname">SURNAME</string>
+    <string name="name">NAME</string>
 </resources>

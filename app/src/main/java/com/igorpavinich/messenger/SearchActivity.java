@@ -5,10 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 public class SearchActivity extends AppCompatActivity {
 
     ImageView imgSearch, imgMsg, imgProfile;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,18 @@ public class SearchActivity extends AppCompatActivity {
         imgMsg.setOnClickListener(imgClickListener);
         imgProfile.setOnClickListener(imgClickListener);
         imgSearch.setOnClickListener(imgClickListener);
+        listView = findViewById(R.id.searchList);
+        listView.setOnTouchListener(new OnSwipeListener(SearchActivity.this){
+            @Override
+            public void onSwipeRight() {
+                startActivity(new Intent(SearchActivity.this, MessagesActivity.class));
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
+            }
+        });
     }
 
     View.OnClickListener imgClickListener = new View.OnClickListener() {

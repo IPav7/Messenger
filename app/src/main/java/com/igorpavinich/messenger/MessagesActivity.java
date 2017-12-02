@@ -46,6 +46,17 @@ public class MessagesActivity extends AppCompatActivity {
             }
         });*/
         listView = findViewById(R.id.dialogsList);
+        listView.setOnTouchListener(new OnSwipeListener(MessagesActivity.this){
+            @Override
+            public void onSwipeRight() {
+                startActivity(new Intent(MessagesActivity.this, ProfileActivity.class));
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                startActivity(new Intent(MessagesActivity.this, SearchActivity.class));
+            }
+        });
         dialogs = new ArrayList<>();
         adapter = new DialogsAdapter(this, dialogs);
         listView.setAdapter(adapter);
