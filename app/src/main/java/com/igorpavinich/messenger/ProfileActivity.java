@@ -60,6 +60,16 @@ public class ProfileActivity extends AppCompatActivity {
             public void onSwipeLeft() {
                 startActivity(new Intent(ProfileActivity.this, DialogsActivity.class));
             }
+
+            @Override
+            void onSwipeTop() {
+
+            }
+
+            @Override
+            void onSwipeBottom() {
+
+            }
         });
         new GetProfileImage().execute(login);
         new GetProfileInfo().execute(login);
@@ -95,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
                 connection.setRequestProperty("Cache-Control", "no-cache");
                 code = connection.getResponseCode();
                 BufferedReader in = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream()));
+                        connection.getInputStream(), "windows-1251"));
                 String inputLine = in.readLine();
                 in.close();
                 connection.disconnect();
@@ -127,7 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if(codeImage == HttpURLConnection.HTTP_OK) {
+            if(codeImage == HttpURLConnection.HTTP_OK && img!=null) {
                 profileImg.setImageBitmap(img);
             }
             else profileImg.setImageDrawable(getResources().getDrawable(R.drawable.anonimg));
@@ -143,7 +153,6 @@ public class ProfileActivity extends AppCompatActivity {
                 url = new URL(str);
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
-                connection.setRequestProperty("Cache-Control", "no-cache");
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
                 codeImage = connection.getResponseCode();
                 InputStream is = connection.getInputStream();

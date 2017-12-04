@@ -13,6 +13,7 @@ import android.widget.EditText;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 import static com.igorpavinich.messenger.CheckInput.checkLogin;
@@ -89,7 +90,8 @@ public class SignIn_Activity extends Activity {
             HttpURLConnection connection = null;
             URL url;
             try {
-                url = new URL(Consts.URL + "?operation=login&login=" + params[0] + "&password=" + params[1]);
+                url = new URL(Consts.URL + "?operation=login&login=" + URLEncoder.encode(params[0], "UTF-8") + "&password=" +
+                        URLEncoder.encode(params[1], "UTF-8"));
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 List<String> cookies = connection.getHeaderFields().get(CookiesWork.COOKIES_HEADER);

@@ -3,12 +3,12 @@ package com.igorpavinich.messenger;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -16,9 +16,12 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MessageActivity extends Activity {
 
@@ -26,7 +29,8 @@ public class MessageActivity extends Activity {
     ArrayList<Message> messages;
     MessageAdapter adapter;
     String second;
-    ImageView imgSearch, imgMsg, imgProfile;
+    ImageView imgSearch, imgMsg, imgProfile, sendImg;
+    EditText etMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,18 +42,96 @@ public class MessageActivity extends Activity {
         new HttpConnect().execute();
         listView = findViewById(R.id.listMessages);
         listView.setAdapter(adapter);
+        listView.setOnTouchListener(new OnSwipeListener(this){
+            @Override
+            public void onSwipeRight() {
+            }
+
+            @Override
+            public void onSwipeLeft() {
+            }
+
+            @Override
+            void onSwipeTop() {
+            }
+
+            @Override
+            void onSwipeBottom() {
+                new HttpConnect().execute();
+            }
+        });
         imgSearch = findViewById(R.id.imgSearch);
         imgMsg = findViewById(R.id.imgMsg);
         imgProfile = findViewById(R.id.imgProfile);
         imgMsg.setOnClickListener(imgClickListener);
         imgProfile.setOnClickListener(imgClickListener);
         imgSearch.setOnClickListener(imgClickListener);
+        sendImg = findViewById(R.id.sendImg);
+        sendImg.setOnClickListener(sendMessage);
+        etMessage = findViewById(R.id.etMessage);
     }
+
+    View.OnClickListener sendMessage = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String text = etMessage.getText().toString();
+            if(!text.isEmpty()){
+                new Send().execute(text);
+            }
+        }
+    };
 
     int code;
     ArrayList<Message> bufMessages;
+    String request;
 
-    class HttpConnect extends AsyncTask<String, Void, Void> {
+    class Send extends AsyncTask<String, Void, Void>{
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(code != HttpURLConnection.HTTP_OK)
+                Toast.makeText(MessageActivity.this, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
+            else {
+                etMessage.setText("");
+                new HttpConnect().execute();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            URL url;
+            try {
+                url = new URL(Consts.URL + "?operation=sendmessage");
+                connection = (HttpURLConnection)url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Cookie", CookiesWork.cookie);
+                OutputStreamWriter wr= new OutputStreamWriter(connection.getOutputStream(),"windows-1251");
+                String json = new Gson().toJson(new Message(CookiesWork.cookie, second, params[0]));
+                request = json;
+                wr.write(json);
+                wr.flush();
+                wr.close();
+                code = connection.getResponseCode();
+                connection.disconnect();
+            }
+            catch (Exception e){
+            }
+            finally {
+                if(connection!=null)
+                    connection.disconnect();
+            }
+            return null;
+        }
+    }
+
+    class HttpConnect extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            messages.clear();
+        }
 
         @Override
         protected void onPostExecute(Void aVoid) {
@@ -62,10 +144,11 @@ public class MessageActivity extends Activity {
                 adapter.notifyDataSetChanged();
             }
             else Toast.makeText(MessageActivity.this, "Ошибка соединения с сервером", Toast.LENGTH_SHORT).show();
+            listView.setSelection(messages.size());
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(Void... params) {
             HttpURLConnection connection = null;
             URL url;
             try {
@@ -75,7 +158,7 @@ public class MessageActivity extends Activity {
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
                 code = connection.getResponseCode();
                 BufferedReader in = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream()));
+                        connection.getInputStream(), "windows-1251"));
                 String json = in.readLine();
                 in.close();
                 connection.disconnect();

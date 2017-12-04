@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 import static com.igorpavinich.messenger.CheckInput.checkLogin;
@@ -90,6 +91,11 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
 
     class SendProfile extends AsyncTask<String, Void, Void> {
         @Override
+        protected void onPreExecute() {
+            code = 0;
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK) {
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
@@ -102,8 +108,8 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
             HttpURLConnection connection = null;
             URL url;
             try {
-                url = new URL(Consts.URL + "?operation=register&name=" + params[0] + "&surname=" + params[1]
-                 + "&login=" + params[2] + "&password=" + params[3]);
+                url = new URL(Consts.URL + "?operation=register&name=" + URLEncoder.encode(params[0], "UTF-8") + "&surname=" + URLEncoder.encode(params[1], "UTF-8")
+                 + "&login=" + URLEncoder.encode(params[2], "UTF-8") + "&password=" + URLEncoder.encode(params[3], "UTF-8"));
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 List<String> cookies = connection.getHeaderFields().get(CookiesWork.COOKIES_HEADER);

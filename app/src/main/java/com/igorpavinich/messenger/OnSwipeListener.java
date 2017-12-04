@@ -9,7 +9,7 @@ import android.view.View;
  * Created by Igor Pavinich on 02.12.2017.
  */
 
-public class OnSwipeListener implements View.OnTouchListener {
+public abstract class OnSwipeListener implements View.OnTouchListener {
     private final GestureDetector gestureDetector;
 
     public OnSwipeListener(Context ctx){
@@ -47,6 +47,18 @@ public class OnSwipeListener implements View.OnTouchListener {
                         result = true;
                     }
                 }
+                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD)
+                {
+                    if (diffY > 0)
+                    {
+                        onSwipeTop();
+                    }
+                    else
+                    {
+                        onSwipeBottom();
+                    }
+                }
+                result = true;
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -54,9 +66,11 @@ public class OnSwipeListener implements View.OnTouchListener {
         }
     }
 
-    public void onSwipeRight() {
-    }
+    abstract void onSwipeTop();
 
-    public void onSwipeLeft() {
-    }
+    abstract void onSwipeBottom();
+
+    abstract void onSwipeRight();
+
+    public abstract void onSwipeLeft();
 }

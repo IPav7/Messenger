@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -24,6 +25,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DialogsActivity extends AppCompatActivity {
 
@@ -39,10 +42,7 @@ public class DialogsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialogs);
         CookiesWork.loadCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
-        dialogs = new ArrayList<>();
-        buffer = new ArrayList<>();
-        adapter = new DialogsAdapter(this, dialogs);
-        new HttpConnect().execute();
+
         listView = findViewById(R.id.dialogsList);
         listView.setOnTouchListener(new OnSwipeListener(DialogsActivity.this){
             @Override
@@ -54,8 +54,17 @@ public class DialogsActivity extends AppCompatActivity {
             public void onSwipeLeft() {
                 startActivity(new Intent(DialogsActivity.this, SearchActivity.class));
             }
+
+            @Override
+            void onSwipeTop() {
+                new HttpConnect().execute();
+            }
+
+            @Override
+            void onSwipeBottom() {
+
+            }
         });
-        listView.setAdapter(adapter);
         listView.setOnItemClickListener(onItemClickListener);
         imgSearch = findViewById(R.id.imgSearch);
         imgMsg = findViewById(R.id.imgMsg);
@@ -65,13 +74,17 @@ public class DialogsActivity extends AppCompatActivity {
         imgSearch.setOnClickListener(imgClickListener);
     }
 
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
+
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Intent intent = new Intent(DialogsActivity.this, MessageActivity.class);
             intent.putExtra("login", ((Dialog)adapter.getItem(i)).getSecond());
             startActivity(intent);
-            //Toast.makeText(DialogsActivity.this, ((Dialog)adapter.getItem(i)).getSecond(), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -80,7 +93,6 @@ public class DialogsActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.imgMsg:
-                    //loadMessages();
                     break;
                 case R.id.imgProfile:
                     startActivity(new Intent(DialogsActivity.this, ProfileActivity.class));
@@ -93,13 +105,18 @@ public class DialogsActivity extends AppCompatActivity {
     };
 
     @Override
-    public void onBackPressed() {
-        finishAffinity();
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        dialogs = new ArrayList<>();
+        buffer = new ArrayList<>();
+        adapter = new DialogsAdapter(this, dialogs);
+        listView.setAdapter(adapter);
+        new HttpConnect().execute();
     }
 
     @Override
@@ -111,6 +128,12 @@ public class DialogsActivity extends AppCompatActivity {
     ArrayList<Dialog> bufDialogs;
 
     class HttpConnect extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            dialogs.clear();
+            buffer.clear();
+        }
 
         @Override
         protected void onPostExecute(Void aVoid) {
@@ -139,7 +162,7 @@ public class DialogsActivity extends AppCompatActivity {
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
                 code = connection.getResponseCode();
                 BufferedReader in = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream()));
+                        connection.getInputStream(), "windows-1251"));
                 String json = in.readLine();
                 in.close();
                 connection.disconnect();

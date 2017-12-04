@@ -62,6 +62,15 @@ public class SearchActivity extends AppCompatActivity {
             public void onSwipeLeft() {
                 startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
             }
+            @Override
+            void onSwipeTop() {
+
+            }
+
+            @Override
+            void onSwipeBottom() {
+
+            }
         });
         listView.setOnItemClickListener(onItemClickListener);
     }
@@ -92,8 +101,7 @@ public class SearchActivity extends AppCompatActivity {
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
                 code = connection.getResponseCode();
                 BufferedReader in = new BufferedReader(new InputStreamReader(
-                        connection.getInputStream()));
-               // String inputLine = in.readLine();
+                        connection.getInputStream(), "windows-1251"));
                 String json = in.readLine();
                 in.close();
                 connection.disconnect();

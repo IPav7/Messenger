@@ -2,6 +2,7 @@ package com.igorpavinich.messenger;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Igor Pavinich on 30.11.2017.
@@ -49,13 +52,19 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
         TextView text = row.findViewById(R.id.dialog_lastMessage);
         text.setText(dialogs.get(position).getLastMessage());
         TextView date = row.findViewById(R.id.msgTime);
-        date.setText(dialogs.get(position).getDate().getHours() + ":" + dialogs.get(position).getDate().getMinutes());
+        Date data = new Date(dialogs.get(position).getDate());
+        String hours = String.valueOf(data.getHours());
+        String minutes = String.valueOf(data.getMinutes());
+        if(data.getHours()<10) hours = "0" + hours;
+        if(data.getMinutes()<10) minutes = "0" + minutes;
+        date.setText(hours + ":" + minutes);
       //  date.setText("22:22");
         ImageView imageView = row.findViewById(R.id.item_img);
         Bitmap img = dialogs.get(position).getPicture();
         if(img!=null)
             imageView.setImageBitmap(dialogs.get(position).getPicture());
         else imageView.setImageResource(R.drawable.ic_mood_black_72dp);
+        if(dialogs.get(position).isUnread()) row.setBackgroundColor(Color.LTGRAY);
         return row;
     }
 

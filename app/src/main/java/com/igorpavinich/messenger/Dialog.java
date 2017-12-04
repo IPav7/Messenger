@@ -30,13 +30,13 @@ public class Dialog {
     }
 
     private String lastMessage;
-    private Date date;
+    private long date;
     private boolean unread;
 
     public Dialog() {
     }
 
-    public Dialog(String second, String lastMessage, Date date, boolean unread) {
+    public Dialog(String second, String lastMessage, long date, boolean unread) {
         this.second = second;
         this.lastMessage = lastMessage;
         this.date = date;
@@ -69,11 +69,11 @@ public class Dialog {
         this.lastMessage = lastMessage;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
