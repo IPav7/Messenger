@@ -1,6 +1,8 @@
 package com.igorpavinich.messenger;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,6 +29,7 @@ public class DialogsActivity extends AppCompatActivity {
 
     ListView listView;
     ArrayList<Dialog> dialogs;
+    ArrayList<Dialog> buffer;
     DialogsAdapter adapter;
     SearchView searchView;
     ImageView imgSearch, imgMsg, imgProfile;
@@ -36,6 +40,7 @@ public class DialogsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dialogs);
         CookiesWork.loadCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
         dialogs = new ArrayList<>();
+        buffer = new ArrayList<>();
         adapter = new DialogsAdapter(this, dialogs);
         new HttpConnect().execute();
         listView = findViewById(R.id.dialogsList);
@@ -114,9 +119,9 @@ public class DialogsActivity extends AppCompatActivity {
                // Toast.makeText(DialogsActivity.this, "size: " + bufDialogs.size(), Toast.LENGTH_SHORT).show();
                 for (Dialog dialog :
                         bufDialogs) {
-                    dialogs.add(dialog);
+                    buffer.add(dialog);
                 }
-                adapter.notifyDataSetChanged();
+                new GetImage().execute(buffer);
             }
             else if(code == HttpURLConnection.HTTP_NOT_FOUND)
                 startActivity(new Intent(DialogsActivity.this, SignIn_Activity.class));
@@ -139,6 +144,51 @@ public class DialogsActivity extends AppCompatActivity {
                 in.close();
                 connection.disconnect();
                 bufDialogs = new Gson().fromJson(json, new TypeToken<ArrayList<Dialog>>(){}.getType());
+            }
+            catch (Exception e){
+            }
+            finally {
+                if(connection!=null)
+                    connection.disconnect();
+            }
+            return null;
+        }
+    }
+
+    class GetImage extends AsyncTask<ArrayList<Dialog>, Void, Boolean>{
+
+        @Override
+        protected void onPostExecute(Boolean aVoid) {
+            for (Dialog dialog :
+                    buffer) {
+                dialogs.add(dialog);
+            }
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        protected Boolean doInBackground(ArrayList<Dialog>... params) {
+            HttpURLConnection connection = null;
+            URL url;
+            try {
+                for (Dialog dialog: params[0]) {
+                    String str = Consts.URL + "?operation=profile&type=image&login=" + dialog.getSecond();
+                    url = new URL(str);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setRequestProperty("Cookie", CookiesWork.cookie);
+                    int code = connection.getResponseCode();
+                    if(code==HttpURLConnection.HTTP_OK){
+                        InputStream is = connection.getInputStream();
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inPreferredConfig = Bitmap.Config.RGB_565;
+                        options.inSampleSize = 20;
+                        Bitmap img = BitmapFactory.decodeStream(is, null, options);
+                        dialog.setPicture(img);
+                        is.close();
+                    }
+                    connection.disconnect();
+                }
             }
             catch (Exception e){
             }

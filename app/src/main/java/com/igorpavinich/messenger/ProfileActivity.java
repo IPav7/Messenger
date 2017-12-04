@@ -171,6 +171,10 @@ public class ProfileActivity extends AppCompatActivity {
                 CookiesWork.cookie = "";
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
                 startActivity(new Intent(ProfileActivity.this, SignIn_Activity.class));
+            }else{
+                Intent intent = new Intent(ProfileActivity.this, MessageActivity.class);
+                intent.putExtra("login", login);
+                startActivity(intent);
             }
         }
     };

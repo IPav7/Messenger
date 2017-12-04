@@ -1,6 +1,7 @@
 package com.igorpavinich.messenger;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,10 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
         date.setText(dialogs.get(position).getDate().getHours() + ":" + dialogs.get(position).getDate().getMinutes());
       //  date.setText("22:22");
         ImageView imageView = row.findViewById(R.id.item_img);
-        imageView.setImageResource(R.drawable.ic_mood_black_72dp);
+        Bitmap img = dialogs.get(position).getPicture();
+        if(img!=null)
+            imageView.setImageBitmap(dialogs.get(position).getPicture());
+        else imageView.setImageResource(R.drawable.ic_mood_black_72dp);
         return row;
     }
 

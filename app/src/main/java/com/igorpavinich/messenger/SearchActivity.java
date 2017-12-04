@@ -71,11 +71,6 @@ public class SearchActivity extends AppCompatActivity {
     class HttpConnect extends AsyncTask<String, Void, Boolean> {
 
         @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
         protected void onPostExecute(Boolean aVoid) {
             if (code == HttpURLConnection.HTTP_OK) {
                 for (User user :

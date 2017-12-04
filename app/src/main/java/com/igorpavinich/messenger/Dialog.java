@@ -1,5 +1,7 @@
 package com.igorpavinich.messenger;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
 
 /**
@@ -9,6 +11,15 @@ import java.util.Date;
 public class Dialog {
     private String second;
     private String name;
+    private Bitmap picture;
+
+    public Bitmap getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Bitmap picture) {
+        this.picture = picture;
+    }
 
     public String getName() {
         return name;

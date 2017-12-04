@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ public class MessageActivity extends Activity {
     ArrayList<Message> messages;
     MessageAdapter adapter;
     String second;
+    ImageView imgSearch, imgMsg, imgProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,12 @@ public class MessageActivity extends Activity {
         new HttpConnect().execute();
         listView = findViewById(R.id.listMessages);
         listView.setAdapter(adapter);
+        imgSearch = findViewById(R.id.imgSearch);
+        imgMsg = findViewById(R.id.imgMsg);
+        imgProfile = findViewById(R.id.imgProfile);
+        imgMsg.setOnClickListener(imgClickListener);
+        imgProfile.setOnClickListener(imgClickListener);
+        imgSearch.setOnClickListener(imgClickListener);
     }
 
     int code;
@@ -81,5 +90,22 @@ public class MessageActivity extends Activity {
             return null;
         }
     }
+
+    View.OnClickListener imgClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()){
+                case R.id.imgMsg:
+                    startActivity(new Intent(MessageActivity.this, DialogsActivity.class));
+                    break;
+                case R.id.imgProfile:
+                    startActivity(new Intent(MessageActivity.this, ProfileActivity.class));
+                    break;
+                case R.id.imgSearch:
+                    startActivity(new Intent(MessageActivity.this, SearchActivity.class));
+                    break;
+            }
+        }
+    };
 
 }
