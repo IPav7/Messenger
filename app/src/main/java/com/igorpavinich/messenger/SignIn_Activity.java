@@ -80,7 +80,7 @@ public class SignIn_Activity extends Activity {
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK) {
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
-                startActivity(new Intent(SignIn_Activity.this, MessagesActivity.class));
+                startActivity(new Intent(SignIn_Activity.this, DialogsActivity.class));
             }
         }
 

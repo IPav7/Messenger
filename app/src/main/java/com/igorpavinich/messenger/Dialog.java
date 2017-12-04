@@ -1,20 +1,53 @@
 package com.igorpavinich.messenger;
 
+import java.util.Date;
+
 /**
  * Created by Igor Pavinich on 30.11.2017.
  */
 
 public class Dialog {
-    private String lastMessage;
-    private String date;
+    private String second;
     private String name;
-    private String surname;
 
-    public Dialog(String name, String surname, String lastMessage, String date) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String lastMessage;
+    private Date date;
+    private boolean unread;
+
+    public Dialog() {
+    }
+
+    public Dialog(String second, String lastMessage, Date date, boolean unread) {
+        this.second = second;
         this.lastMessage = lastMessage;
         this.date = date;
-        this.name = name;
-        this.surname = surname;
+        this.unread = unread;
+    }
+
+    @Override
+    public String toString() {
+        return "Dialog{" +
+                "second='" + second + '\'' +
+                ", lastMessage='" + lastMessage + '\'' +
+                ", date=" + date +
+                ", unread=" + unread +
+                '}';
+    }
+
+    public String getSecond() {
+        return second;
+    }
+
+    public void setSecond(String second) {
+        this.second = second;
     }
 
     public String getLastMessage() {
@@ -25,27 +58,19 @@ public class Dialog {
         this.lastMessage = lastMessage;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public String getName() {
-        return name;
+    public boolean isUnread() {
+        return unread;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setUnread(boolean unread) {
+        this.unread = unread;
     }
 }

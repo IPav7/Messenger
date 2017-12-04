@@ -1,6 +1,7 @@
 package com.igorpavinich.messenger;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     }
 
     public Object getItem(int arg0) {
-        return null;
+        return users.get(arg0);
     }
 
     public long getItemId(int position) {
@@ -48,7 +49,10 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         TextView text = row.findViewById(R.id.user_login);
         text.setText(users.get(position).getLogin());
         ImageView imageView = row.findViewById(R.id.user_img);
-        imageView.setImageResource(R.drawable.ic_mood_black_72dp);
+        Bitmap img = users.get(position).getPicture();
+        if(img!=null)
+        imageView.setImageBitmap(users.get(position).getPicture());
+        else imageView.setImageResource(R.drawable.ic_mood_black_72dp);
         return row;
     }
 

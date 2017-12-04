@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.util.LruCache;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,12 +15,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.CacheResponse;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -39,11 +34,11 @@ public class ProfileActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         Intent myIntent = getIntent();
         login = myIntent.getStringExtra("login");
-        if(login==null) {
+        if(login == null)
             login = CookiesWork.cookie;
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_outline_blue_24dp));
-        }
-        else fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_message_blue_24dp));
+        if(!login.equals(CookiesWork.cookie))
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_message_blue_24dp));
+        else fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_outline_blue_24dp));
         fab.setOnClickListener(onClickListener);
         imgSearch = findViewById(R.id.imgSearch);
         imgMsg = findViewById(R.id.imgMsg);
@@ -63,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onSwipeLeft() {
-                startActivity(new Intent(ProfileActivity.this, MessagesActivity.class));
+                startActivity(new Intent(ProfileActivity.this, DialogsActivity.class));
             }
         });
         new GetProfileImage().execute(login);
@@ -185,7 +180,7 @@ public class ProfileActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.imgMsg:
-                    startActivity(new Intent(ProfileActivity.this, MessagesActivity.class));
+                    startActivity(new Intent(ProfileActivity.this, DialogsActivity.class));
                     break;
                 case R.id.imgProfile:
                     if(!login.equals(CookiesWork.cookie))

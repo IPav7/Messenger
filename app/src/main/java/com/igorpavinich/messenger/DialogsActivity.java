@@ -8,16 +8,21 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class MessagesActivity extends AppCompatActivity {
+public class DialogsActivity extends AppCompatActivity {
 
     ListView listView;
     ArrayList<Dialog> dialogs;
@@ -28,24 +33,25 @@ public class MessagesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages);
+        setContentView(R.layout.activity_dialogs);
         CookiesWork.loadCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
+        dialogs = new ArrayList<>();
+        adapter = new DialogsAdapter(this, dialogs);
         new HttpConnect().execute();
         listView = findViewById(R.id.dialogsList);
-        listView.setOnTouchListener(new OnSwipeListener(MessagesActivity.this){
+        listView.setOnTouchListener(new OnSwipeListener(DialogsActivity.this){
             @Override
             public void onSwipeRight() {
-                startActivity(new Intent(MessagesActivity.this, ProfileActivity.class));
+                startActivity(new Intent(DialogsActivity.this, ProfileActivity.class));
             }
 
             @Override
             public void onSwipeLeft() {
-                startActivity(new Intent(MessagesActivity.this, SearchActivity.class));
+                startActivity(new Intent(DialogsActivity.this, SearchActivity.class));
             }
         });
-        dialogs = new ArrayList<>();
-        adapter = new DialogsAdapter(this, dialogs);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(onItemClickListener);
         imgSearch = findViewById(R.id.imgSearch);
         imgMsg = findViewById(R.id.imgMsg);
         imgProfile = findViewById(R.id.imgProfile);
@@ -54,18 +60,28 @@ public class MessagesActivity extends AppCompatActivity {
         imgSearch.setOnClickListener(imgClickListener);
     }
 
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent intent = new Intent(DialogsActivity.this, MessageActivity.class);
+            intent.putExtra("login", ((Dialog)adapter.getItem(i)).getSecond());
+            startActivity(intent);
+            //Toast.makeText(DialogsActivity.this, ((Dialog)adapter.getItem(i)).getSecond(), Toast.LENGTH_SHORT).show();
+        }
+    };
+
     View.OnClickListener imgClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.imgMsg:
-                    loadMessages();
+                    //loadMessages();
                     break;
                 case R.id.imgProfile:
-                    startActivity(new Intent(MessagesActivity.this, ProfileActivity.class));
+                    startActivity(new Intent(DialogsActivity.this, ProfileActivity.class));
                     break;
                 case R.id.imgSearch:
-                    startActivity(new Intent(MessagesActivity.this, SearchActivity.class));
+                    startActivity(new Intent(DialogsActivity.this, SearchActivity.class));
                     break;
             }
         }
@@ -87,16 +103,24 @@ public class MessagesActivity extends AppCompatActivity {
     }
 
     int code;
+    ArrayList<Dialog> bufDialogs;
 
     class HttpConnect extends AsyncTask<String, Void, Void> {
 
         @Override
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK)
-                loadMessages();
+            {
+               // Toast.makeText(DialogsActivity.this, "size: " + bufDialogs.size(), Toast.LENGTH_SHORT).show();
+                for (Dialog dialog :
+                        bufDialogs) {
+                    dialogs.add(dialog);
+                }
+                adapter.notifyDataSetChanged();
+            }
             else if(code == HttpURLConnection.HTTP_NOT_FOUND)
-                startActivity(new Intent(MessagesActivity.this, SignIn_Activity.class));
-            else Toast.makeText(MessagesActivity.this, "Ошибка соединения с сервером", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DialogsActivity.this, SignIn_Activity.class));
+            else Toast.makeText(DialogsActivity.this, "Ошибка соединения с сервером", Toast.LENGTH_SHORT).show();
             }
 
         @Override
@@ -104,11 +128,17 @@ public class MessagesActivity extends AppCompatActivity {
             HttpURLConnection connection = null;
             URL url;
             try {
-                url = new URL(Consts.URL + "?operation=messages");
+                url = new URL(Consts.URL + "?operation=dialogs");
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
                 code = connection.getResponseCode();
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        connection.getInputStream()));
+                String json = in.readLine();
+                in.close();
+                connection.disconnect();
+                bufDialogs = new Gson().fromJson(json, new TypeToken<ArrayList<Dialog>>(){}.getType());
             }
             catch (Exception e){
             }
@@ -118,13 +148,6 @@ public class MessagesActivity extends AppCompatActivity {
             }
             return null;
         }
-    }
-
-    private void loadMessages() {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        dialogs.add(new Dialog("Igor", "Pavinich", "pidor", format.format(new Date())));
-        dialogs.add(new Dialog("Evg", "Kuril", "sam", format.format(new Date())));
-        adapter.notifyDataSetChanged();
     }
 
     @Override

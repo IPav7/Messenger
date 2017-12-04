@@ -1,7 +1,6 @@
 package com.igorpavinich.messenger;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -94,7 +93,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK) {
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
-                startActivity(new Intent(SignUp_Activity.this, MessagesActivity.class));
+                startActivity(new Intent(SignUp_Activity.this, DialogsActivity.class));
             }
         }
 

@@ -10,9 +10,9 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,6 +29,7 @@ public class SearchActivity extends AppCompatActivity {
     ImageView imgSearch, imgMsg, imgProfile;
     ListView listView;
     ArrayList<User> users;
+    ArrayList<User> buffer;
     SearchAdapter adapter;
     SearchView searchView;
 
@@ -37,7 +38,12 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         users = new ArrayList<>();
-        new HttpConnect().execute();
+        buffer = new ArrayList<>();
+        adapter = new SearchAdapter(SearchActivity.this, users);
+        try {
+            new HttpConnect().execute();
+        }catch (Exception e){}
+      //  adapter.notifyDataSetChanged();
         imgSearch = findViewById(R.id.imgSearch);
         imgMsg = findViewById(R.id.imgMsg);
         imgProfile = findViewById(R.id.imgProfile);
@@ -45,13 +51,11 @@ public class SearchActivity extends AppCompatActivity {
         imgProfile.setOnClickListener(imgClickListener);
         imgSearch.setOnClickListener(imgClickListener);
         listView = findViewById(R.id.searchList);
-        users = new ArrayList<>();
-        adapter = new SearchAdapter(SearchActivity.this, users);
         listView.setAdapter(adapter);
         listView.setOnTouchListener(new OnSwipeListener(SearchActivity.this){
             @Override
             public void onSwipeRight() {
-                startActivity(new Intent(SearchActivity.this, MessagesActivity.class));
+                startActivity(new Intent(SearchActivity.this, DialogsActivity.class));
             }
 
             @Override
@@ -59,32 +63,31 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
             }
         });
+        listView.setOnItemClickListener(onItemClickListener);
     }
 
     int code;
     ArrayList<User> bufUsers;
-    class HttpConnect extends AsyncTask<String, Void, Void> {
+    class HttpConnect extends AsyncTask<String, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
+
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Boolean aVoid) {
             if (code == HttpURLConnection.HTTP_OK) {
-                for (User user : bufUsers) {
-                    try {
-                       // new GetImage().execute(bufUsers.get(i));
-                        users.add(user);
-                    } catch (Exception e) {
-                    }
+                for (User user :
+                        bufUsers) {
+                    buffer.add(user);
                 }
-                adapter.notifyDataSetChanged();
+                new GetImage().execute(buffer);
             }
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Boolean doInBackground(String... params) {
             HttpURLConnection connection = null;
             URL url;
             try {
@@ -111,32 +114,40 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    class GetImage extends AsyncTask<User, Void, Void>{
+    class GetImage extends AsyncTask<ArrayList<User>, Void, Boolean>{
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            users.add(users.get(0));
+        protected void onPostExecute(Boolean aVoid) {
+            for (User user :
+                    buffer) {
+                users.add(user);
+            }
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        protected Void doInBackground(User... params) {
+        protected Boolean doInBackground(ArrayList<User>... params) {
             HttpURLConnection connection = null;
             URL url;
             try {
-                String str = Consts.URL + "?operation=profile&type=image&login=" + params[0].getLogin();
-                url = new URL(str);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Cookie", CookiesWork.cookie);
-                InputStream is = connection.getInputStream();
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.RGB_565;
-                options.inSampleSize = 20;
-                Bitmap img = BitmapFactory.decodeStream(is, null, options);
-                params[0].setPicture(img);
-                is.close();
-                connection.disconnect();
+                for (User user: params[0]) {
+                    String str = Consts.URL + "?operation=profile&type=image&login=" + user.getLogin();
+                    url = new URL(str);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setRequestProperty("Cookie", CookiesWork.cookie);
+                    int code = connection.getResponseCode();
+                    if(code==HttpURLConnection.HTTP_OK){
+                    InputStream is = connection.getInputStream();
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inPreferredConfig = Bitmap.Config.RGB_565;
+                    options.inSampleSize = 20;
+                    Bitmap img = BitmapFactory.decodeStream(is, null, options);
+                    user.setPicture(img);
+                    is.close();
+                    }
+                    connection.disconnect();
+                }
             }
             catch (Exception e){
             }
@@ -148,12 +159,21 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
+            intent.putExtra("login", ((User)adapter.getItem(i)).getLogin());
+            startActivity(intent);
+        }
+    };
+
     View.OnClickListener imgClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.imgMsg:
-                    startActivity(new Intent(SearchActivity.this, MessagesActivity.class));
+                    startActivity(new Intent(SearchActivity.this, DialogsActivity.class));
                     break;
                 case R.id.imgProfile:
                     startActivity(new Intent(SearchActivity.this, ProfileActivity.class));

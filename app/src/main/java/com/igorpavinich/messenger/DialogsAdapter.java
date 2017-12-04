@@ -33,7 +33,7 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
     }
 
     public Object getItem(int arg0) {
-        return null;
+        return dialogs.get(arg0);
     }
 
     public long getItemId(int position) {
@@ -44,11 +44,12 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.dialog_item, viewGroup, false);
         TextView receiver = row.findViewById(R.id.dialog_receiver);
-        receiver.setText(dialogs.get(position).getSurname() + " " + dialogs.get(position).getName());
+        receiver.setText(dialogs.get(position).getName());
         TextView text = row.findViewById(R.id.dialog_lastMessage);
         text.setText(dialogs.get(position).getLastMessage());
         TextView date = row.findViewById(R.id.msgTime);
-        date.setText(dialogs.get(position).getDate());
+        date.setText(dialogs.get(position).getDate().getHours() + ":" + dialogs.get(position).getDate().getMinutes());
+      //  date.setText("22:22");
         ImageView imageView = row.findViewById(R.id.item_img);
         imageView.setImageResource(R.drawable.ic_mood_black_72dp);
         return row;
@@ -70,7 +71,7 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
                     String fullName;
                 for (Dialog dialog :
                         bufDialogs) {
-                    fullName = dialog.getName() + " " + dialog.getSurname();
+                    fullName = dialog.getSecond();
                     if(fullName.toLowerCase().contains(charSequence.toString().toLowerCase()))
                         filtered.add(dialog);
                 }

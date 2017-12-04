@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.igorpavinich.messenger.MessagesActivity">
+    tools:context="com.igorpavinich.messenger.DialogsActivity">
     
     <ListView
         android:layout_width="match_parent"
