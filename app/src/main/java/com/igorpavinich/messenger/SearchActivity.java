@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,6 +27,9 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
+    ProgressBar progressBar;
+    HttpConnect httpConnect;
+    GetImage getImage;
     ImageView imgSearch, imgMsg, imgProfile;
     ListView listView;
     ArrayList<User> users;
@@ -37,13 +41,14 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        progressBar = findViewById(R.id.progressBar);
         users = new ArrayList<>();
         buffer = new ArrayList<>();
         adapter = new SearchAdapter(SearchActivity.this, users);
         try {
-            new HttpConnect().execute();
+            httpConnect = new HttpConnect();
+            httpConnect.execute();
         }catch (Exception e){}
-      //  adapter.notifyDataSetChanged();
         imgSearch = findViewById(R.id.imgSearch);
         imgMsg = findViewById(R.id.imgMsg);
         imgProfile = findViewById(R.id.imgProfile);
@@ -75,9 +80,21 @@ public class SearchActivity extends AppCompatActivity {
         listView.setOnItemClickListener(onItemClickListener);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        httpConnect.cancel(true);
+        getImage.cancel(true);
+    }
+
     int code;
     ArrayList<User> bufUsers;
     class HttpConnect extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected void onPostExecute(Boolean aVoid) {
@@ -86,7 +103,8 @@ public class SearchActivity extends AppCompatActivity {
                         bufUsers) {
                     buffer.add(user);
                 }
-                new GetImage().execute(buffer);
+                getImage = new GetImage();
+                getImage.execute(buffer);
             }
         }
 
@@ -126,6 +144,7 @@ public class SearchActivity extends AppCompatActivity {
                 users.add(user);
             }
             adapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override

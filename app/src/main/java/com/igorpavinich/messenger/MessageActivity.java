@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -24,7 +25,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MessageActivity extends Activity {
-
+    ProgressBar progressBar;
+    HttpConnect httpConnect;
+    Send send;
     ListView listView;
     ArrayList<Message> messages;
     MessageAdapter adapter;
@@ -36,10 +39,12 @@ public class MessageActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        progressBar = findViewById(R.id.progressBar);
         second = getIntent().getStringExtra("login");
         messages = new ArrayList<>();
         adapter = new MessageAdapter(this, messages);
-        new HttpConnect().execute();
+        httpConnect = new HttpConnect();
+        httpConnect.execute();
         listView = findViewById(R.id.listMessages);
         listView.setAdapter(adapter);
         listView.setOnTouchListener(new OnSwipeListener(this){
@@ -57,7 +62,8 @@ public class MessageActivity extends Activity {
 
             @Override
             void onSwipeBottom() {
-                new HttpConnect().execute();
+                httpConnect = new HttpConnect();
+                httpConnect.execute();
             }
         });
         imgSearch = findViewById(R.id.imgSearch);
@@ -76,7 +82,8 @@ public class MessageActivity extends Activity {
         public void onClick(View view) {
             String text = etMessage.getText().toString();
             if(!text.isEmpty()){
-                new Send().execute(text);
+                send = new Send();
+                send.execute(text);
             }
         }
     };
@@ -87,12 +94,17 @@ public class MessageActivity extends Activity {
 
     class Send extends AsyncTask<String, Void, Void>{
         @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             if(code != HttpURLConnection.HTTP_OK)
                 Toast.makeText(MessageActivity.this, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
             else {
                 etMessage.setText("");
-                new HttpConnect().execute();
+                httpConnect = new HttpConnect();
+                httpConnect.execute();
             }
         }
 
@@ -131,6 +143,7 @@ public class MessageActivity extends Activity {
         @Override
         protected void onPreExecute() {
             messages.clear();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -145,6 +158,7 @@ public class MessageActivity extends Activity {
             }
             else Toast.makeText(MessageActivity.this, "Ошибка соединения с сервером", Toast.LENGTH_SHORT).show();
             listView.setSelection(messages.size());
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -27,14 +28,18 @@ import static com.igorpavinich.messenger.CheckInput.checkPassword;
 
 public class SignUp_Activity extends AppCompatActivity implements View.OnClickListener {
 
+    ProgressBar progressBar;
     ImageView imageView;
     Button bSignUp, bSignIn;
     EditText etName, etSurname, etLogin, etPassword;
+    boolean imageUpdated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         imageView = findViewById(R.id.signup_image);
         bSignIn = findViewById(R.id.signup_bSignIn);
         bSignUp = findViewById(R.id.signup_bSignUp);
@@ -52,10 +57,12 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
         imageView.setOnClickListener(this);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK){
             imageView.setImageURI(data.getData());
+            imageUpdated = true;
         }
         else
             Toast.makeText(SignUp_Activity.this, "Фото не загружено", Toast.LENGTH_SHORT).show();
@@ -65,11 +72,10 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.signup_bSignIn:
-                finish();
+                startActivity(new Intent(SignUp_Activity.this, SignIn_Activity.class));
                 break;
             case R.id.signup_bSignUp:
-                if(imageView.getDrawable().getConstantState() !=
-                        getResources().getDrawable(R.mipmap.ic_person).getConstantState()){
+                if(imageUpdated){
                     Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
                     new PostImage().execute(bitmap);
                 }
@@ -93,6 +99,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPreExecute() {
             code = 0;
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -101,6 +108,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
                 startActivity(new Intent(SignUp_Activity.this, DialogsActivity.class));
             }
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override
@@ -131,7 +139,13 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
     class PostImage extends AsyncTask<Bitmap, Void, Void> {
 
         @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
+            progressBar.setVisibility(View.GONE);
             if(code == HttpURLConnection.HTTP_NOT_FOUND)
                 Toast.makeText(SignUp_Activity.this, "Ошибка загрузки изображения", Toast.LENGTH_SHORT).show();
         }

@@ -12,11 +12,18 @@
         android:layout_height="0dp"
         android:divider="@null"
         android:layout_weight="1"
+        android:background="@color/mess"
         android:id="@+id/listMessages"
         android:stackFromBottom="true"/>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
+        android:background="@color/cpb_white"
         android:layout_height="wrap_content">
         <EditText
             android:layout_width="0dp"
@@ -36,6 +43,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:background="@color/botBar"
         android:orientation="horizontal">
         <ImageView
             android:layout_width="0dp"
@@ -43,21 +51,21 @@
             android:layout_height="24dp"
             android:id="@+id/imgSearch"
             android:layout_gravity="center"
-            android:src="@drawable/ic_search_black_24dp"/>
+            android:src="@drawable/icon_users"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:id="@+id/imgMsg"
-            android:src="@drawable/ic_message_green_24dp"/>
+            android:src="@drawable/icon_chat_ch"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:id="@+id/imgProfile"
-            android:src="@drawable/ic_account_box_black_24dp"/>
+            android:src="@drawable/icon_profile"/>
     </LinearLayout>
 
 </LinearLayout>

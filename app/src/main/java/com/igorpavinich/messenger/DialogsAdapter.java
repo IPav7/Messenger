@@ -58,7 +58,6 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
         if(data.getHours()<10) hours = "0" + hours;
         if(data.getMinutes()<10) minutes = "0" + minutes;
         date.setText(hours + ":" + minutes);
-      //  date.setText("22:22");
         ImageView imageView = row.findViewById(R.id.item_img);
         Bitmap img = dialogs.get(position).getPicture();
         if(img!=null)

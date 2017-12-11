@@ -6,20 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.igorpavinich.messenger.SignIn_Activity">
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical">
-        <!-- <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal">
-             <ImageView
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:src="@drawable/ic_account_circle_black_24dp"/>-->
          <com.wrapp.floatlabelededittext.FloatLabeledEditText
              android:layout_width="match_parent"
              android:layout_height="wrap_content">
@@ -32,15 +29,6 @@
                  android:inputType="textPersonName"
                  android:gravity="center"/>
          </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-             <!-- </LinearLayout>-->
-             <!--<LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:orientation="horizontal">
-                 <ImageView
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:src="@drawable/ic_lock_black_24dp"/> -->
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

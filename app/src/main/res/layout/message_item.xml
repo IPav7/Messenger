@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/mesText"
-        android:textSize="16sp"
+        android:textSize="26sp"
+        android:textColor="@color/colorPrimaryDark"
         android:fontFamily="monospace"
         />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/mesText"
         android:id="@+id/mesTime"
-        android:textSize="12sp"
+        android:textSize="16sp"
         android:fontFamily="monospace"/>
 
-</LinearLayout>
+</RelativeLayout>

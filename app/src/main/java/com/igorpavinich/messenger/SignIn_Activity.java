@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
@@ -21,6 +22,8 @@ import static com.igorpavinich.messenger.CheckInput.checkPassword;
 
 public class SignIn_Activity extends Activity {
 
+    ProgressBar progressBar;
+    HttpConnect httpConnect;
     EditText etLogin, etPassword;
     Button bSignIn, bSignUp;
     CookieManager cookieManager;
@@ -29,6 +32,8 @@ public class SignIn_Activity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         etLogin = findViewById(R.id.signin_username);
         etPassword = findViewById(R.id.signin_password);
         etLogin.addTextChangedListener(textWatcher);
@@ -39,7 +44,9 @@ public class SignIn_Activity extends Activity {
         bSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    new HttpConnect().execute(etLogin.getText().toString(), etPassword.getText().toString());
+               progressBar.setVisibility(View.VISIBLE);
+                    httpConnect = new HttpConnect();
+                httpConnect.execute(etLogin.getText().toString(), etPassword.getText().toString());
                // signIn();
             }
         });
@@ -66,6 +73,7 @@ public class SignIn_Activity extends Activity {
     protected void onPause() {
         super.onPause();
         CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
+        httpConnect.cancel(true);
     }
 
     @Override
@@ -78,8 +86,13 @@ public class SignIn_Activity extends Activity {
 
     class HttpConnect extends AsyncTask<String, Void, Void>{
         @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK) {
+                progressBar.setVisibility(View.GONE);
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
                 startActivity(new Intent(SignIn_Activity.this, DialogsActivity.class));
             }

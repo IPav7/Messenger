@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ProfileActivity extends AppCompatActivity {
-
+    ProgressBar progressBar;
+    GetProfileImage getProfileImage;
+    GetProfileInfo getProfileInfo;
     ImageView imgSearch, imgMsg, imgProfile, profileImg;
     TextView profileName, profileSurname, profileLogin;
     FloatingActionButton fab;
@@ -31,13 +34,14 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        progressBar = findViewById(R.id.progressBar);
         fab = findViewById(R.id.fab);
         Intent myIntent = getIntent();
         login = myIntent.getStringExtra("login");
         if(login == null)
             login = CookiesWork.cookie;
         if(!login.equals(CookiesWork.cookie))
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_message_blue_24dp));
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.icon_chat));
         else fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_outline_blue_24dp));
         fab.setOnClickListener(onClickListener);
         imgSearch = findViewById(R.id.imgSearch);
@@ -71,14 +75,29 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-        new GetProfileImage().execute(login);
-        new GetProfileInfo().execute(login);
+        getProfileImage = new GetProfileImage();
+        getProfileImage.execute(login);
+        getProfileInfo = new GetProfileInfo();
+        getProfileInfo.execute(login);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getProfileInfo.cancel(true);
+        getProfileImage.cancel(true);
     }
 
     int code;
 
     private class GetProfileInfo extends AsyncTask<String, Void, Void> {
         User user;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK)
@@ -142,6 +161,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
             else profileImg.setImageDrawable(getResources().getDrawable(R.drawable.anonimg));
             codeImage = 0;
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override

@@ -1,12 +1,15 @@
 package com.igorpavinich.messenger;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -44,16 +47,22 @@ public class MessageAdapter extends BaseAdapter {
         Date data = new Date(messages.get(position).getDate());
         TextView date = row.findViewById(R.id.mesTime);
         if(messages.get(position).getSender().equals(CookiesWork.cookie)){
-            text.setGravity(Gravity.RIGHT);
-            date.setGravity(Gravity.RIGHT);
+            RelativeLayout.LayoutParams layoutParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+            text.setLayoutParams(layoutParams);
+            RelativeLayout.LayoutParams params =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_END);
+            params.addRule(RelativeLayout.BELOW, R.id.mesText);
+            date.setLayoutParams(params);
         }
         text.setText(messages.get(position).getMessage());
-        String hours = String.valueOf(data.getHours());
-        String minutes = String.valueOf(data.getMinutes());
-        if(data.getHours()<10) hours = "0" + hours;
-        if(data.getMinutes()<10) minutes = "0" + minutes;
+            String hours = String.valueOf(data.getHours());
+            String minutes = String.valueOf(data.getMinutes());
+            if (data.getHours() < 10) hours = "0" + hours;
+            if (data.getMinutes() < 10) minutes = "0" + minutes;
         date.setText(hours + ":" + minutes);
-       // date.setText("22:22");
         return row;
     }
 }
