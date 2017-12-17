@@ -17,16 +17,13 @@ import java.util.ArrayList;
  * Created by Igor Pavinich on 02.12.2017.
  */
 
-public class SearchAdapter extends BaseAdapter implements Filterable {
+public class SearchAdapter extends BaseAdapter {
     ArrayList<User> users;
     Context mContext;
-    private NameFilter nameFilter;
-    ArrayList<User> bufUsers;
 
     public SearchAdapter(Context mContext, ArrayList<User> users) {
         this.mContext = mContext;
         this.users = users;
-        bufUsers = users;
     }
 
     public int getCount() {
@@ -46,50 +43,14 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         View row = inflater.inflate(R.layout.user_item, viewGroup, false);
         TextView fullName = row.findViewById(R.id.user_name);
         fullName.setText(users.get(position).getSurname() + " " + users.get(position).getName());
-        TextView text = row.findViewById(R.id.user_login);
-        text.setText(users.get(position).getLogin());
         ImageView imageView = row.findViewById(R.id.user_img);
         Bitmap img = users.get(position).getPicture();
         if(img!=null)
         imageView.setImageBitmap(users.get(position).getPicture());
         else imageView.setImageResource(R.drawable.ic_mood_black_72dp);
+        ImageView online = row.findViewById(R.id.onlineImg);
+        if(users.get(position).isOnline())
+          online.setVisibility(View.VISIBLE);
         return row;
     }
-
-    @Override
-    public Filter getFilter() {
-        if(nameFilter == null)
-            nameFilter = new SearchAdapter.NameFilter();
-        return nameFilter;
-    }
-
-    class NameFilter extends Filter{
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            FilterResults filterResults = new FilterResults();
-            if(charSequence!=null && charSequence.length()>0){
-                ArrayList<User> filtered = new ArrayList<>();
-                String fullName;
-                for (User user :
-                        bufUsers) {
-                    fullName = user.getName() + " " + user.getSurname() + " " + user.getLogin();
-                    if(fullName.toLowerCase().contains(charSequence.toString().toLowerCase()))
-                        filtered.add(user);
-                }
-                filterResults.count = filtered.size();
-                filterResults.values = filtered;
-            }else{
-                filterResults.count = bufUsers.size();
-                filterResults.values = bufUsers;
-            }
-            return filterResults;
-        }
-
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            users = (ArrayList<User>)filterResults.values;
-            notifyDataSetChanged();
-        }
-    }
-
 }

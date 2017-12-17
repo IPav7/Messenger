@@ -103,7 +103,7 @@ public class SignIn_Activity extends Activity {
             HttpURLConnection connection = null;
             URL url;
             try {
-                url = new URL(Consts.URL + "?operation=login&login=" + URLEncoder.encode(params[0], "UTF-8") + "&password=" +
+                url = new URL(getResources().getString(R.string.url) + "?operation=login&login=" + URLEncoder.encode(params[0], "UTF-8") + "&password=" +
                         URLEncoder.encode(params[1], "UTF-8"));
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");

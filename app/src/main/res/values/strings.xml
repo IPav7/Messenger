@@ -11,5 +11,8 @@
     <string name="login">LOGIN</string>
     <string name="surname">SURNAME</string>
     <string name="name">NAME</string>
-    <string name="write_a_message">Write a message...</string>
+    <string name="write_a_message">Write a message</string>
+    <string name="url">http://192.168.137.1:8080/mess/</string>
+    <string name="refresh">Обновить</string>
+    <string name="dialogs">Диалоги</string>
 </resources>

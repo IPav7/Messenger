@@ -16,21 +16,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
                 android:textSize="20sp"
                 android:fontFamily="monospace"
-                android:layout_alignParentTop="true"
                 android:paddingTop="5dp"
                 android:textColor="@color/colorPrimary"
                 android:id="@+id/user_name"/>
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:textSize="12sp"
-                android:paddingBottom="5dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:textColor="@color/colorPrimaryDark"
-                android:id="@+id/user_login"/>
+                android:layout_toEndOf="@+id/user_name"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_phone_iphone_blue_24dp"
+                android:visibility="invisible"
+                android:id="@+id/onlineImg"/>
         </RelativeLayout>
 </LinearLayout>

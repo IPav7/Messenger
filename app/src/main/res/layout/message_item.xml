@@ -19,5 +19,11 @@
         android:id="@+id/mesTime"
         android:textSize="16sp"
         android:fontFamily="monospace"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playSound"
+        android:src="@drawable/ic_music_note_black_24dp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

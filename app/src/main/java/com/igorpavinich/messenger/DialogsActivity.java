@@ -1,21 +1,21 @@
 package com.igorpavinich.messenger;
 
-import android.app.ProgressDialog;
+import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -27,8 +27,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class DialogsActivity extends AppCompatActivity {
     ProgressBar progressBar;
@@ -36,7 +34,6 @@ public class DialogsActivity extends AppCompatActivity {
     ArrayList<Dialog> dialogs;
     ArrayList<Dialog> buffer;
     DialogsAdapter adapter;
-    SearchView searchView;
     ImageView imgSearch, imgMsg, imgProfile;
 
     @Override
@@ -46,27 +43,6 @@ public class DialogsActivity extends AppCompatActivity {
         CookiesWork.loadCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.dialogsList);
-        listView.setOnTouchListener(new OnSwipeListener(DialogsActivity.this){
-            @Override
-            public void onSwipeRight() {
-                startActivity(new Intent(DialogsActivity.this, ProfileActivity.class));
-            }
-
-            @Override
-            public void onSwipeLeft() {
-                startActivity(new Intent(DialogsActivity.this, SearchActivity.class));
-            }
-
-            @Override
-            void onSwipeTop() {
-                new HttpConnect().execute();
-            }
-
-            @Override
-            void onSwipeBottom() {
-
-            }
-        });
         listView.setOnItemClickListener(onItemClickListener);
         imgSearch = findViewById(R.id.imgSearch);
         imgMsg = findViewById(R.id.imgMsg);
@@ -107,11 +83,6 @@ public class DialogsActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         dialogs = new ArrayList<>();
@@ -119,11 +90,6 @@ public class DialogsActivity extends AppCompatActivity {
         adapter = new DialogsAdapter(this, dialogs);
         listView.setAdapter(adapter);
         new HttpConnect().execute();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     int code;
@@ -142,7 +108,6 @@ public class DialogsActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK)
             {
-               // Toast.makeText(DialogsActivity.this, "size: " + bufDialogs.size(), Toast.LENGTH_SHORT).show();
                 for (Dialog dialog :
                         bufDialogs) {
                     buffer.add(dialog);
@@ -159,7 +124,7 @@ public class DialogsActivity extends AppCompatActivity {
             HttpURLConnection connection = null;
             URL url;
             try {
-                url = new URL(Consts.URL + "?operation=dialogs");
+                url = new URL(getResources().getString(R.string.url) + "?operation=dialogs");
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
@@ -199,7 +164,7 @@ public class DialogsActivity extends AppCompatActivity {
             URL url;
             try {
                 for (Dialog dialog: params[0]) {
-                    String str = Consts.URL + "?operation=profile&type=image&login=" + dialog.getSecond();
+                    String str = getResources().getString(R.string.url) + "?operation=profile&type=image&login=" + dialog.getSecond();
                     url = new URL(str);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -226,26 +191,4 @@ public class DialogsActivity extends AppCompatActivity {
             return null;
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView = (SearchView)item.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-        return true;
     }
-
-}

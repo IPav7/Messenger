@@ -11,7 +11,16 @@ import java.util.Date;
 public class Dialog {
     private String second;
     private String name;
+    private String type;
     private Bitmap picture;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Bitmap getPicture() {
         return picture;

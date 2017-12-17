@@ -116,7 +116,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
             HttpURLConnection connection = null;
             URL url;
             try {
-                url = new URL(Consts.URL + "?operation=register&name=" + URLEncoder.encode(params[0], "UTF-8") + "&surname=" + URLEncoder.encode(params[1], "UTF-8")
+                url = new URL(getResources().getString(R.string.url) + "?operation=register&name=" + URLEncoder.encode(params[0], "UTF-8") + "&surname=" + URLEncoder.encode(params[1], "UTF-8")
                  + "&login=" + URLEncoder.encode(params[2], "UTF-8") + "&password=" + URLEncoder.encode(params[3], "UTF-8"));
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
@@ -158,7 +158,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 params[0].compress(Bitmap.CompressFormat.JPEG, 50, stream);
                 byte[] byteArray = stream.toByteArray();
-                url = new URL(Consts.URL + "?operation=register");
+                url = new URL(getResources().getString(R.string.url) + "?operation=register");
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setDoOutput(true);

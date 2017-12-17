@@ -42,13 +42,10 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         users = new ArrayList<>();
         buffer = new ArrayList<>();
         adapter = new SearchAdapter(SearchActivity.this, users);
-        try {
-            httpConnect = new HttpConnect();
-            httpConnect.execute();
-        }catch (Exception e){}
         imgSearch = findViewById(R.id.imgSearch);
         imgMsg = findViewById(R.id.imgMsg);
         imgProfile = findViewById(R.id.imgProfile);
@@ -57,26 +54,6 @@ public class SearchActivity extends AppCompatActivity {
         imgSearch.setOnClickListener(imgClickListener);
         listView = findViewById(R.id.searchList);
         listView.setAdapter(adapter);
-        listView.setOnTouchListener(new OnSwipeListener(SearchActivity.this){
-            @Override
-            public void onSwipeRight() {
-                startActivity(new Intent(SearchActivity.this, DialogsActivity.class));
-            }
-
-            @Override
-            public void onSwipeLeft() {
-                startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
-            }
-            @Override
-            void onSwipeTop() {
-
-            }
-
-            @Override
-            void onSwipeBottom() {
-
-            }
-        });
         listView.setOnItemClickListener(onItemClickListener);
     }
 
@@ -93,6 +70,7 @@ public class SearchActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+           if(bufUsers!=null) bufUsers.clear();
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -113,7 +91,7 @@ public class SearchActivity extends AppCompatActivity {
             HttpURLConnection connection = null;
             URL url;
             try {
-                url = new URL(Consts.URL + "?operation=search");
+                url = new URL(getResources().getString(R.string.url) + "?operation=search&value=" + params[0]);
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
@@ -138,6 +116,11 @@ public class SearchActivity extends AppCompatActivity {
     class GetImage extends AsyncTask<ArrayList<User>, Void, Boolean>{
 
         @Override
+        protected void onPreExecute() {
+           if(users!=null) users.clear();
+        }
+
+        @Override
         protected void onPostExecute(Boolean aVoid) {
             for (User user :
                     buffer) {
@@ -145,6 +128,7 @@ public class SearchActivity extends AppCompatActivity {
             }
             adapter.notifyDataSetChanged();
             progressBar.setVisibility(View.GONE);
+            buffer.clear();
         }
 
         @Override
@@ -153,7 +137,7 @@ public class SearchActivity extends AppCompatActivity {
             URL url;
             try {
                 for (User user: params[0]) {
-                    String str = Consts.URL + "?operation=profile&type=image&login=" + user.getLogin();
+                    String str = getResources().getString(R.string.url) + "?operation=profile&type=image&login=" + user.getLogin();
                     url = new URL(str);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -214,12 +198,15 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                try {
+                    httpConnect = new HttpConnect();
+                    httpConnect.execute(query);
+                }catch (Exception e){}
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
                 return false;
             }
         });

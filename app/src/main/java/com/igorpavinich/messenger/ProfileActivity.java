@@ -54,27 +54,6 @@ public class ProfileActivity extends AppCompatActivity {
         profileLogin = findViewById(R.id.profileLogin);
         profileName = findViewById(R.id.profileName);
         profileSurname = findViewById(R.id.profileSurname);
-        profileImg.setOnTouchListener(new OnSwipeListener(ProfileActivity.this){
-            @Override
-            public void onSwipeRight() {
-                startActivity(new Intent(ProfileActivity.this, SearchActivity.class));
-            }
-
-            @Override
-            public void onSwipeLeft() {
-                startActivity(new Intent(ProfileActivity.this, DialogsActivity.class));
-            }
-
-            @Override
-            void onSwipeTop() {
-
-            }
-
-            @Override
-            void onSwipeBottom() {
-
-            }
-        });
         getProfileImage = new GetProfileImage();
         getProfileImage.execute(login);
         getProfileInfo = new GetProfileInfo();
@@ -116,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
             HttpURLConnection connection = null;
             URL url;
             try {
-                String str = Consts.URL + "?operation=profile&type=info&login=" + params[0];
+                String str = getResources().getString(R.string.url) + "?operation=profile&type=info&login=" + params[0];
                 url = new URL(str);
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
@@ -169,7 +148,7 @@ public class ProfileActivity extends AppCompatActivity {
             HttpURLConnection connection = null;
             URL url;
             try {
-                String str = Consts.URL + "?operation=profile&type=image&login=" + params[0];
+                String str = getResources().getString(R.string.url) + "?operation=profile&type=image&login=" + params[0];
                 url = new URL(str);
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");

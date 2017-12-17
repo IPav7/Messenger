@@ -50,7 +50,9 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
         TextView receiver = row.findViewById(R.id.dialog_receiver);
         receiver.setText(dialogs.get(position).getName());
         TextView text = row.findViewById(R.id.dialog_lastMessage);
+        if(dialogs.get(position).getType().equals("text"))
         text.setText(dialogs.get(position).getLastMessage());
+        else text.setText("Вложение");
         TextView date = row.findViewById(R.id.msgTime);
         Date data = new Date(dialogs.get(position).getDate());
         String hours = String.valueOf(data.getHours());
