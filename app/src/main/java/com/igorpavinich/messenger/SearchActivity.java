@@ -137,7 +137,7 @@ public class SearchActivity extends AppCompatActivity {
             URL url;
             try {
                 for (User user: params[0]) {
-                    String str = getResources().getString(R.string.url) + "?operation=profile&type=image&login=" + user.getLogin();
+                    String str = getResources().getString(R.string.url) + "?operation=profile&type=image&size=small&login=" + user.getLogin();
                     url = new URL(str);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -145,10 +145,7 @@ public class SearchActivity extends AppCompatActivity {
                     int code = connection.getResponseCode();
                     if(code==HttpURLConnection.HTTP_OK){
                     InputStream is = connection.getInputStream();
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inPreferredConfig = Bitmap.Config.RGB_565;
-                    options.inSampleSize = 20;
-                    Bitmap img = BitmapFactory.decodeStream(is, null, options);
+                    Bitmap img = BitmapFactory.decodeStream(is);
                     user.setPicture(img);
                     is.close();
                     }

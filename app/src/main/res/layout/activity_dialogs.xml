@@ -6,6 +6,9 @@
     android:orientation="vertical"
     tools:context="com.igorpavinich.messenger.DialogsActivity">
 
+    <include layout="@layout/dialogs_toolbar"
+        android:id="@+id/dialogs_toolbar"/>
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

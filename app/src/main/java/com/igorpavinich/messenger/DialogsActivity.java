@@ -1,16 +1,18 @@
 package com.igorpavinich.messenger;
 
 import android.app.ActionBar;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -28,7 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class DialogsActivity extends AppCompatActivity {
+public class DialogsActivity extends Activity {
     ProgressBar progressBar;
     ListView listView;
     ArrayList<Dialog> dialogs;
@@ -39,6 +41,7 @@ public class DialogsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_dialogs);
         CookiesWork.loadCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
         progressBar = findViewById(R.id.progressBar);
@@ -50,6 +53,10 @@ public class DialogsActivity extends AppCompatActivity {
         imgMsg.setOnClickListener(imgClickListener);
         imgProfile.setOnClickListener(imgClickListener);
         imgSearch.setOnClickListener(imgClickListener);
+    }
+
+    protected void refreshDialogs(View view){
+        new HttpConnect().execute();
     }
 
     @Override
@@ -70,8 +77,6 @@ public class DialogsActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()){
-                case R.id.imgMsg:
-                    break;
                 case R.id.imgProfile:
                     startActivity(new Intent(DialogsActivity.this, ProfileActivity.class));
                     break;
@@ -164,7 +169,7 @@ public class DialogsActivity extends AppCompatActivity {
             URL url;
             try {
                 for (Dialog dialog: params[0]) {
-                    String str = getResources().getString(R.string.url) + "?operation=profile&type=image&login=" + dialog.getSecond();
+                    String str = getResources().getString(R.string.url) + "?operation=profile&type=image&size=small&login=" + dialog.getSecond();
                     url = new URL(str);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -172,10 +177,7 @@ public class DialogsActivity extends AppCompatActivity {
                     int code = connection.getResponseCode();
                     if(code==HttpURLConnection.HTTP_OK){
                         InputStream is = connection.getInputStream();
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inPreferredConfig = Bitmap.Config.RGB_565;
-                        options.inSampleSize = 20;
-                        Bitmap img = BitmapFactory.decodeStream(is, null, options);
+                        Bitmap img = BitmapFactory.decodeStream(is);
                         dialog.setPicture(img);
                         is.close();
                     }

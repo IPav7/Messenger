@@ -1,6 +1,7 @@
 package com.igorpavinich.messenger;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
@@ -37,7 +38,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MessageActivity extends AppCompatActivity {
+public class MessageActivity extends Activity {
 
     ProgressBar progressBar;
     HttpConnect httpConnect;
@@ -51,6 +52,7 @@ public class MessageActivity extends AppCompatActivity {
     private MediaRecorder mediaRecorder;
     String fileName;
     boolean recording;
+    TextView opponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class MessageActivity extends AppCompatActivity {
         second = getIntent().getStringExtra("login");
         messages = new ArrayList<>();
         adapter = new MessageAdapter(this, messages);
+        opponent = findViewById(R.id.messageOpponent);
+        opponent.setText(second);
         httpConnect = new HttpConnect();
         httpConnect.execute();
         listView = findViewById(R.id.listMessages);
@@ -75,6 +79,22 @@ public class MessageActivity extends AppCompatActivity {
         sendSound = findViewById(R.id.sendSound);
         sendSound.setOnClickListener(sendSoundMessage);
         etMessage = findViewById(R.id.etMessage);
+    }
+
+    protected void onClickToolbarMessages(View v){
+        switch(v.getId()){
+            case R.id.backfromMessages:
+                startActivity(new Intent(MessageActivity.this, DialogsActivity.class));
+                break;
+            case R.id.messageOpponent:
+                Intent intent = new Intent(MessageActivity.this, ProfileActivity.class);
+                intent.putExtra("login", second);
+                startActivity(intent);
+                break;
+            case R.id.refreshMessages:
+                httpConnect.execute();
+                break;
+        }
     }
 
     long time;
