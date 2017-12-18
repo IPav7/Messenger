@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -29,14 +30,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DialogsActivity extends Activity {
-    ProgressBar progressBar;
     ListView listView;
     ArrayList<Dialog> dialogs;
     ArrayList<Dialog> buffer;
     DialogsAdapter adapter;
     ImageView imgSearch, imgMsg, imgProfile;
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,6 @@ public class DialogsActivity extends Activity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_dialogs);
         CookiesWork.loadCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
-        progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.dialogsList);
         listView.setOnItemClickListener(onItemClickListener);
         imgSearch = findViewById(R.id.imgSearch);
@@ -94,19 +96,18 @@ public class DialogsActivity extends Activity {
         buffer = new ArrayList<>();
         adapter = new DialogsAdapter(this, dialogs);
         listView.setAdapter(adapter);
-        new HttpConnect().execute();
+        callAsynchronousTask();
     }
 
     int code;
     ArrayList<Dialog> bufDialogs;
 
-    class HttpConnect extends AsyncTask<String, Void, Void> {
+    class HttpConnect extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
             dialogs.clear();
             buffer.clear();
-            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -125,7 +126,7 @@ public class DialogsActivity extends Activity {
             }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(Void... params) {
             HttpURLConnection connection = null;
             URL url;
             try {
@@ -160,7 +161,6 @@ public class DialogsActivity extends Activity {
                 dialogs.add(dialog);
             }
             adapter.notifyDataSetChanged();
-            progressBar.setVisibility(View.GONE);
         }
 
         @Override
@@ -193,4 +193,30 @@ public class DialogsActivity extends Activity {
             return null;
         }
     }
+
+    public void callAsynchronousTask() {
+        final Handler handler = new Handler();
+        timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                                new HttpConnect().execute();
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 5000);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
+        timer.purge();
+    }
+}

@@ -26,12 +26,11 @@ public class Message {
         this.date = date;
     }
 
-    public Message(String sender, String receiver, String message, String type, long date) {
+    public Message(String sender, String receiver, String message, String type) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
         this.type = type;
-        this.date = date;
     }
 
     public String getType() {

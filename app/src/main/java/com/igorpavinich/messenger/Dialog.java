@@ -13,6 +13,15 @@ public class Dialog {
     private String name;
     private String type;
     private Bitmap picture;
+    private boolean online;
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
 
     public String getType() {
         return type;

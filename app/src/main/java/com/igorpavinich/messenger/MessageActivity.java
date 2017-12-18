@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,10 +38,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MessageActivity extends Activity {
 
-    ProgressBar progressBar;
+  //  ProgressBar progressBar;
     HttpConnect httpConnect;
     Send send;
     ListView listView;
@@ -53,19 +56,22 @@ public class MessageActivity extends Activity {
     String fileName;
     boolean recording;
     TextView opponent;
+    long lastUpdate=0;
+    Timer timer;
+    boolean firstTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-        progressBar = findViewById(R.id.progressBar);
+      //  progressBar = findViewById(R.id.progressBar);
         second = getIntent().getStringExtra("login");
         messages = new ArrayList<>();
         adapter = new MessageAdapter(this, messages);
         opponent = findViewById(R.id.messageOpponent);
         opponent.setText(second);
-        httpConnect = new HttpConnect();
-        httpConnect.execute();
+   //     httpConnect = new HttpConnect();
+     //   httpConnect.execute();
         listView = findViewById(R.id.listMessages);
         listView.setAdapter(adapter);
         imgSearch = findViewById(R.id.imgSearch);
@@ -79,6 +85,8 @@ public class MessageActivity extends Activity {
         sendSound = findViewById(R.id.sendSound);
         sendSound.setOnClickListener(sendSoundMessage);
         etMessage = findViewById(R.id.etMessage);
+        firstTime = true;
+        callAsynchronousTask();
     }
 
     protected void onClickToolbarMessages(View v){
@@ -92,7 +100,7 @@ public class MessageActivity extends Activity {
                 startActivity(intent);
                 break;
             case R.id.refreshMessages:
-                httpConnect.execute();
+                Toast.makeText(MessageActivity.this, "pos: " + listView.getLastVisiblePosition() + " " + messages.size(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -111,8 +119,7 @@ public class MessageActivity extends Activity {
                     mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
                     mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
                     time = Calendar.getInstance().getTimeInMillis();
-                    fileName = Environment.getExternalStorageDirectory() + "/record-"
-                            + CookiesWork.cookie + "-" + second + "-" +  String.valueOf(time/1000) + ".3gpp";
+                    fileName = Environment.getExternalStorageDirectory() + "/bufrecord.3gpp";
                     Toast.makeText(MessageActivity.this, fileName, Toast.LENGTH_SHORT).show();
                     mediaRecorder.setOutputFile(fileName);
                     mediaRecorder.prepare();
@@ -177,7 +184,7 @@ public class MessageActivity extends Activity {
             String text = etMessage.getText().toString();
             if(!text.isEmpty()){
                 send = new Send();
-                Message message = new Message(CookiesWork.cookie, second, text, "text",Calendar.getInstance().getTimeInMillis());
+                Message message = new Message(CookiesWork.cookie, second, text, "text");
                 send.execute(message);
             }
         }
@@ -185,6 +192,7 @@ public class MessageActivity extends Activity {
 
     int code;
     ArrayList<Message> bufMessages;
+
 
     class Send extends AsyncTask<Message, Void, Void>{
 
@@ -194,9 +202,8 @@ public class MessageActivity extends Activity {
                 Toast.makeText(MessageActivity.this, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
             else {
                 etMessage.setText("");
-                httpConnect = new HttpConnect();
-                httpConnect.execute();
             }
+            listView.setSelection(messages.size());
         }
 
         @Override
@@ -227,35 +234,39 @@ public class MessageActivity extends Activity {
         }
     }
 
-    class HttpConnect extends AsyncTask<Void, Void, Void> {
+    String buf;
+
+    class HttpConnect extends AsyncTask<String, Void, Void> {
 
         @Override
         protected void onPreExecute() {
-            messages.clear();
-            progressBar.setVisibility(View.VISIBLE);
+          //  progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK)
             {
-                for (Message message :
-                        bufMessages) {
-                    messages.add(message);
-                }
-                adapter.notifyDataSetChanged();
+                    for (Message message :
+                            bufMessages) {
+                        messages.add(message);
+                    }
+                    adapter.notifyDataSetChanged();
             }
             else Toast.makeText(MessageActivity.this, "Ошибка соединения с сервером", Toast.LENGTH_SHORT).show();
-            listView.setSelection(messages.size());
-            progressBar.setVisibility(View.GONE);
+         //   progressBar.setVisibility(View.GONE);
+            if(listView.getLastVisiblePosition()+2 == messages.size())
+                listView.setSelection(messages.size()-1);
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
             HttpURLConnection connection = null;
             URL url;
             try {
-                url = new URL(getResources().getString(R.string.url) + "?operation=messages&receiver=" + second);
+                url = new URL(getResources().getString(R.string.url) + "?operation=messages&receiver=" + second +
+                        "&all=" + params[0]);
+                lastUpdate = System.currentTimeMillis();
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
@@ -263,9 +274,10 @@ public class MessageActivity extends Activity {
                 BufferedReader in = new BufferedReader(new InputStreamReader(
                         connection.getInputStream(), "windows-1251"));
                 String json = in.readLine();
+                buf = json;
                 in.close();
-                connection.disconnect();
                 bufMessages = new Gson().fromJson(json, new TypeToken<ArrayList<Message>>(){}.getType());
+                connection.disconnect();
             }
             catch (Exception e){
             }
@@ -308,7 +320,8 @@ public class MessageActivity extends Activity {
     }
 
     public byte[] toByteArray(String fileName) throws IOException {
-        InputStream inputStream = getContentResolver().openInputStream(Uri.fromFile(new File(fileName)));
+        File file = new File(fileName);
+        InputStream inputStream = getContentResolver().openInputStream(Uri.fromFile(file));
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         int read = 0;
         byte[] buffer = new byte[1024];
@@ -317,8 +330,38 @@ public class MessageActivity extends Activity {
             if (read != -1)
                 out.write(buffer,0,read);
         }
+        file.delete();
         out.close();
         return out.toByteArray();
     }
 
+    public void callAsynchronousTask() {
+        final Handler handler = new Handler();
+        timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            if(firstTime) {
+                                new HttpConnect().execute("true");
+                                firstTime = false;
+                            }
+                            else new HttpConnect().execute("false");
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 1500);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
+        timer.purge();
+    }
 }

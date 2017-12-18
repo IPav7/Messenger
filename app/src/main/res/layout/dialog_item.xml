@@ -26,6 +26,14 @@
         android:fontFamily="monospace"
         android:textColor="@color/colorPrimaryDark"
         android:id="@+id/dialog_receiver"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/dialog_receiver"
+            android:paddingTop="5dp"
+            android:src="@drawable/ic_phone_iphone_blue_24dp"
+            android:visibility="invisible"
+            android:id="@+id/onlineImg"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_alignParentBottom="true"

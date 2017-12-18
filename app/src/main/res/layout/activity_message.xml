@@ -17,11 +17,11 @@
         android:background="@color/mess"
         android:id="@+id/listMessages"
         android:stackFromBottom="true"/>
-    <ProgressBar
+  <!--  <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"/> -->
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"

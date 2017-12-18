@@ -117,7 +117,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
             URL url;
             try {
                 url = new URL(getResources().getString(R.string.url) + "?operation=register&name=" + URLEncoder.encode(params[0], "UTF-8") + "&surname=" + URLEncoder.encode(params[1], "UTF-8")
-                 + "&login=" + URLEncoder.encode(params[2], "UTF-8") + "&password=" + URLEncoder.encode(params[3], "UTF-8"));
+                 + "&login=" + URLEncoder.encode(params[2], "UTF-8") + "&password=" + SHA.encrypt(params[3]));
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 List<String> cookies = connection.getHeaderFields().get(CookiesWork.COOKIES_HEADER);

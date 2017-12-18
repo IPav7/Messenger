@@ -92,10 +92,10 @@ public class SignIn_Activity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             if(code == HttpURLConnection.HTTP_OK) {
-                progressBar.setVisibility(View.GONE);
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
                 startActivity(new Intent(SignIn_Activity.this, DialogsActivity.class));
             }
+            progressBar.setVisibility(View.GONE);
         }
 
         @Override
@@ -104,7 +104,7 @@ public class SignIn_Activity extends Activity {
             URL url;
             try {
                 url = new URL(getResources().getString(R.string.url) + "?operation=login&login=" + URLEncoder.encode(params[0], "UTF-8") + "&password=" +
-                        URLEncoder.encode(params[1], "UTF-8"));
+                        SHA.encrypt(params[1]));
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("GET");
                 List<String> cookies = connection.getHeaderFields().get(CookiesWork.COOKIES_HEADER);
