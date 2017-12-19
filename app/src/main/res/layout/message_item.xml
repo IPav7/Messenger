@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/mesText"
-        android:textSize="26sp"
+        android:textSize="20sp"
         android:textColor="@color/darkGrey"
         />
 
@@ -17,11 +17,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/mesText"
         android:id="@+id/mesTime"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/grey"/>
     <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:id="@+id/playSound"
         android:src="@drawable/icon_voice_start"
         android:visibility="gone"/>

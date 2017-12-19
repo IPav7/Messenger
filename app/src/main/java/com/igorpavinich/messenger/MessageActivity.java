@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaFormat;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -59,19 +60,17 @@ public class MessageActivity extends Activity {
     long lastUpdate=0;
     Timer timer;
     boolean firstTime;
+    TimerTask doAsynchronousTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-      //  progressBar = findViewById(R.id.progressBar);
         second = getIntent().getStringExtra("login");
         messages = new ArrayList<>();
         adapter = new MessageAdapter(this, messages);
         opponent = findViewById(R.id.messageOpponent);
         opponent.setText(second);
-   //     httpConnect = new HttpConnect();
-     //   httpConnect.execute();
         listView = findViewById(R.id.listMessages);
         listView.setAdapter(adapter);
         imgSearch = findViewById(R.id.imgSearch);
@@ -86,6 +85,7 @@ public class MessageActivity extends Activity {
         sendSound.setOnClickListener(sendSoundMessage);
         etMessage = findViewById(R.id.etMessage);
         firstTime = true;
+        timer = new Timer();
         callAsynchronousTask();
     }
 
@@ -99,13 +99,8 @@ public class MessageActivity extends Activity {
                 intent.putExtra("login", second);
                 startActivity(intent);
                 break;
-            case R.id.refreshMessages:
-                new HttpConnect().execute("false");
-                break;
         }
     }
-
-    long time;
 
     View.OnClickListener sendSoundMessage = new View.OnClickListener() {
         @Override
@@ -118,9 +113,7 @@ public class MessageActivity extends Activity {
                     mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                     mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
                     mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                    time = Calendar.getInstance().getTimeInMillis();
                     fileName = Environment.getExternalStorageDirectory() + "/bufrecord.3gpp";
-                    Toast.makeText(MessageActivity.this, fileName, Toast.LENGTH_SHORT).show();
                     mediaRecorder.setOutputFile(fileName);
                     mediaRecorder.prepare();
                     mediaRecorder.start();
@@ -145,7 +138,9 @@ public class MessageActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             if(code != HttpURLConnection.HTTP_OK)
                 Toast.makeText(MessageActivity.this, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
-            else new Send().execute(new Message(CookiesWork.cookie, second, "sound", time));
+            else{
+                new Send().execute(new Message(CookiesWork.cookie, second, "sound"));
+            }
             sendImg.setClickable(true);
         }
 
@@ -185,6 +180,7 @@ public class MessageActivity extends Activity {
             if(!text.isEmpty()){
                 send = new Send();
                 Message message = new Message(CookiesWork.cookie, second, text, "text");
+                etMessage.setText("");
                 send.execute(message);
             }
         }
@@ -197,13 +193,17 @@ public class MessageActivity extends Activity {
     class Send extends AsyncTask<Message, Void, Void>{
 
         @Override
+        protected void onPreExecute() {
+            doAsynchronousTask.cancel();
+        //    timer.purge();
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             if(code != HttpURLConnection.HTTP_OK)
                 Toast.makeText(MessageActivity.this, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
-            else {
-                etMessage.setText("");
-            }
             listView.setSelection(messages.size());
+            callAsynchronousTask();
         }
 
         @Override
@@ -251,6 +251,8 @@ public class MessageActivity extends Activity {
                             bufMessages) {
                         messages.add(message);
                     }
+                if(messages.size()==0)
+                    Toast.makeText(MessageActivity.this, "Сообщений нет\nНапишите первым", Toast.LENGTH_LONG).show();
                     adapter.notifyDataSetChanged();
             }
             else Toast.makeText(MessageActivity.this, "Ошибка соединения с сервером", Toast.LENGTH_SHORT).show();
@@ -336,13 +338,9 @@ public class MessageActivity extends Activity {
     }
 
     public void callAsynchronousTask() {
-        final Handler handler = new Handler();
-        timer = new Timer();
-        TimerTask doAsynchronousTask = new TimerTask() {
+        doAsynchronousTask = new TimerTask() {
             @Override
             public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
                         try {
                             if(firstTime) {
                                 new HttpConnect().execute("true");
@@ -351,11 +349,9 @@ public class MessageActivity extends Activity {
                             else new HttpConnect().execute("false");
                         } catch (Exception e) {
                         }
-                    }
-                });
             }
         };
-        timer.schedule(doAsynchronousTask, 0, 1500);
+        timer.schedule(doAsynchronousTask, 500, 2000);
     }
 
     @Override

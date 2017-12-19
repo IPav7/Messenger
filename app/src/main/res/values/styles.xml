@@ -19,7 +19,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/mess</item>
         <item name="android:textColorPrimary">@color/mess</item>
         <item name="android:textColorHint">@color/cpb_white</item>
     </style>

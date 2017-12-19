@@ -16,14 +16,11 @@ public class Message {
     private InputStream sound;
     private InputStream file;
 
-    public Message() {
-    }
 
-    public Message(String sender, String receiver, String type, long date) {
+    public Message(String sender, String receiver, String type) {
         this.sender = sender;
         this.receiver = receiver;
         this.type = type;
-        this.date = date;
     }
 
     public Message(String sender, String receiver, String message, String type) {

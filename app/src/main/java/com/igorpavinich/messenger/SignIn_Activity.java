@@ -141,6 +141,12 @@ public class SignIn_Activity extends Activity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if(checkLogin(etLogin.getText().toString()))
+                etLogin.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.icon_valid), null);
+            else etLogin.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+            if(checkPassword(etPassword.getText().toString()))
+                etPassword.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.icon_valid), null);
+            else etPassword.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
             if(checkLogin(etLogin.getText().toString()) && checkPassword(etPassword.getText().toString()))
                 bSignIn.setEnabled(true);
             else bSignIn.setEnabled(false);

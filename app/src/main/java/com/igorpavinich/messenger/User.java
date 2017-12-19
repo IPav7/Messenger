@@ -16,6 +16,15 @@ public class User {
     private String surname;
     private Bitmap picture;
     private boolean online;
+    private boolean friend;
+
+    public boolean isFriend() {
+        return friend;
+    }
+
+    public void setFriend(boolean friend) {
+        this.friend = friend;
+    }
 
     public boolean isOnline() {
         return online;

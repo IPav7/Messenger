@@ -26,27 +26,31 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:background="@color/botBar"
-        android:layout_height="wrap_content">
-        <EditText
-            android:layout_width="0dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:layout_weight="10"
-            android:hint="@string/write_a_message"
-            android:id="@+id/etMessage"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent"
-            android:id="@+id/sendImg"
-            android:src="@drawable/icon_send"/>
+        android:layout_height="wrap_content"
+        android:minHeight="50dp">
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent"
             android:id="@+id/sendSound"
             android:src="@drawable/icon_voice_start"/>
+        <EditText
+            android:layout_width="0dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="10dp"
+            android:layout_weight="10"
+            android:hint="@string/write_a_message"
+            android:background="@android:color/transparent"
+            android:id="@+id/etMessage"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:id="@+id/sendImg"
+            android:src="@drawable/icon_send"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -56,6 +57,7 @@ public class SearchActivity extends AppCompatActivity {
         listView = findViewById(R.id.searchList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(onItemClickListener);
+        new GetFriends().execute();
     }
 
     @Override
@@ -63,8 +65,58 @@ public class SearchActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    class GetFriends extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            if(bufUsers!=null) bufUsers.clear();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aVoid) {
+            if (code == HttpURLConnection.HTTP_OK) {
+                for (User user :
+                        bufUsers) {
+                    buffer.add(user);
+                }
+                if(buffer.size()==0)
+                    Toast.makeText(SearchActivity.this, "У вас нет друзей\nНажмите поиск", Toast.LENGTH_LONG).show();
+                getImage = new GetImage();
+                getImage.execute(buffer);
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            HttpURLConnection connection = null;
+            URL url;
+            try {
+                url = new URL(getResources().getString(R.string.url) + "?operation=friends");
+                connection = (HttpURLConnection)url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Cookie", CookiesWork.cookie);
+                code = connection.getResponseCode();
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        connection.getInputStream(), "windows-1251"));
+                String json = in.readLine();
+                in.close();
+                connection.disconnect();
+                bufUsers = new Gson().fromJson(json, new TypeToken<ArrayList<User>>(){}.getType());
+            }
+            catch (Exception e){
+            }
+            finally {
+                if(connection!=null)
+                    connection.disconnect();
+            }
+            return null;
+        }
+    }
+
     int code;
     ArrayList<User> bufUsers;
+
     class HttpConnect extends AsyncTask<String, Void, Boolean> {
 
         @Override

@@ -200,6 +200,18 @@ public class SignUp_Activity extends Activity implements View.OnClickListener {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if(checkLogin(etLogin.getText().toString()))
+                etLogin.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.icon_valid), null);
+            else etLogin.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+            if(checkPassword(etPassword.getText().toString()))
+                etPassword.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.icon_valid), null);
+            else etPassword.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+            if(checkName(etName.getText().toString()))
+                etName.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.icon_valid), null);
+            else etName.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+            if(checkName(etSurname.getText().toString()))
+                etSurname.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.icon_valid), null);
+            else etSurname.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
             if(checkLogin(etLogin.getText().toString()) && checkPassword(etPassword.getText().toString()) &&
                checkName(etName.getText().toString()) && checkName(etSurname.getText().toString()))
                 bSignUp.setEnabled(true);

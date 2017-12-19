@@ -31,7 +31,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileActivity extends Activity {
     ProgressBar progressBar;
@@ -51,16 +53,17 @@ public class ProfileActivity extends Activity {
         progressBar = findViewById(R.id.progressBar);
         fab = findViewById(R.id.fab);
         fabEdit = findViewById(R.id.fabEdit);
+        fabEdit.setOnClickListener(editListener);
         Intent myIntent = getIntent();
         login = myIntent.getStringExtra("login");
         if(login == null)
             login = CookiesWork.cookie;
-        if(!login.equals(CookiesWork.cookie))
+        if(!login.equals(CookiesWork.cookie)) {
             fab.setImageDrawable(getResources().getDrawable(R.drawable.icon_chat_white));
+        }
         else {
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_outline_blue_24dp));
-            fabEdit.setVisibility(View.VISIBLE);
-            fabEdit.setOnClickListener(editListener);
+            fabEdit.setImageDrawable(getResources().getDrawable(R.drawable.ic_edit_black_24dp));
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_exit_to_app_black_24dp));
         }
         fab.setOnClickListener(onClickListener);
         imgSearch = findViewById(R.id.imgSearch);
@@ -115,36 +118,71 @@ public class ProfileActivity extends Activity {
     View.OnClickListener editListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
-            final View editView = getLayoutInflater().inflate(R.layout.editprofile, null);
-            builder.setTitle("Изменить профиль");
-            final EditText name = editView.findViewById(R.id.edit_name);
-            name.setText(profileName.getText().toString());
-            final EditText surname = editView.findViewById(R.id.edit_surname);
-            surname.setText(profileSurname.getText().toString());
-            editImage = editView.findViewById(R.id.editImage);
-            editImage.setImageBitmap(((BitmapDrawable)profileImg.getDrawable()).getBitmap());
-            editImage.setOnClickListener(chooseImg);
-            builder.setPositiveButton("Сохранить", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    new EditProfileInfo().execute(name.getText().toString(),
-                            surname.getText().toString());
-                    if(imageUpdated)
-                        new EditProfileImage().execute(((BitmapDrawable)editImage.getDrawable()).getBitmap());
-                }
-            });
-            builder.setNeutralButton("Отмена", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            builder.setView(editView);
-            dialog = builder.create();
-            dialog.show();
+            if(login.equals(CookiesWork.cookie)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                final View editView = getLayoutInflater().inflate(R.layout.editprofile, null);
+                builder.setTitle("Изменить профиль");
+                final EditText name = editView.findViewById(R.id.edit_name);
+                name.setText(profileName.getText().toString());
+                final EditText surname = editView.findViewById(R.id.edit_surname);
+                surname.setText(profileSurname.getText().toString());
+                editImage = editView.findViewById(R.id.editImage);
+                editImage.setImageBitmap(((BitmapDrawable) profileImg.getDrawable()).getBitmap());
+                editImage.setOnClickListener(chooseImg);
+                builder.setPositiveButton("Сохранить", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        new EditProfileInfo().execute(name.getText().toString(),
+                                surname.getText().toString());
+                        if (imageUpdated)
+                            new EditProfileImage().execute(((BitmapDrawable) editImage.getDrawable()).getBitmap());
+                    }
+                });
+                builder.setNeutralButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.setView(editView);
+                dialog = builder.create();
+                dialog.show();
+            }
+            else{
+                    new AddFriend().execute(String.valueOf(!user.isFriend()));
+            }
         }
     };
+
+    class AddFriend extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            new GetProfileInfo().execute(login);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            URL url;
+            try {
+                url = new URL(getResources().getString(R.string.url) + "?operation=addFriend&second=" + login + "&add=" + params[0]);
+                connection = (HttpURLConnection)url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Cookie", CookiesWork.cookie);
+                connection.setRequestProperty("Cache-Control", "no-cache");
+                code = connection.getResponseCode();
+                connection.disconnect();
+            }
+            catch (Exception e){
+            }
+            finally {
+                if(connection!=null)
+                    connection.disconnect();
+            }
+            return null;
+        }
+    }
 
     class EditProfileImage extends AsyncTask<Bitmap, Void, Void> {
 
@@ -229,22 +267,10 @@ public class ProfileActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getProfileInfo.cancel(true);
-        getProfileImage.cancel(true);
-    }
-
     int code;
+    User user;
 
     private class GetProfileInfo extends AsyncTask<String, Void, Void> {
-        User user;
-
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-        }
 
         @Override
         protected void onPostExecute(Void aVoid) {
@@ -257,6 +283,12 @@ public class ProfileActivity extends Activity {
             profileName.setText(user.getName());
             profileSurname.setText(user.getSurname());
             profileLogin.setText(user.getLogin());
+            if(!login.equals(CookiesWork.cookie)) {
+                if (user.isFriend())
+                    fabEdit.setImageDrawable(getResources().getDrawable(R.drawable.ic_remove_black_24dp));
+                else
+                    fabEdit.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
+            }
         }
 
         @Override
@@ -292,8 +324,10 @@ public class ProfileActivity extends Activity {
     @Override
     protected void onDestroy() {
         profileImg.setImageBitmap(null);
-        img.recycle();
-        img = null;
+     if(img!=null) {
+         img.recycle();
+         img = null;
+     }
         super.onDestroy();
     }
 

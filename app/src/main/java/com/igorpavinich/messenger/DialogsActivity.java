@@ -160,6 +160,8 @@ public class DialogsActivity extends Activity {
                     buffer) {
                 dialogs.add(dialog);
             }
+            if(dialogs.size()==0)
+                Toast.makeText(DialogsActivity.this, "У вас нет диалогов\nВыполните поиск", Toast.LENGTH_LONG).show();
             adapter.notifyDataSetChanged();
         }
 
