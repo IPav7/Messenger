@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/backsign"
     tools:context="com.igorpavinich.messenger.SignUp_Activity">
 
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
+        android:layout_marginBottom="20dp"
         android:layout_gravity="center"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -18,87 +20,75 @@
         android:id="@+id/signup_image"
         android:layout_centerHorizontal="true"
         android:src="@mipmap/ic_person"
+        android:layout_marginTop="30dp"
         android:scaleType="centerCrop"
-        android:layout_above="@+id/signup_layout"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#0fa2c7"/>
+        android:layout_above="@+id/signup_layout"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:id="@+id/signup_layout"
         android:orientation="vertical"
         android:layout_centerInParent="true">
-        <com.wrapp.floatlabelededittext.FloatLabeledEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/signup_name"
                 android:id="@+id/signup_name"
+                android:background="@drawable/rectedittext"
+                android:layout_marginBottom="20dp"
                 android:singleLine="true"
                 android:inputType="textPersonName"
                 android:gravity="center"/>
-        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        <com.wrapp.floatlabelededittext.FloatLabeledEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/signup_surname"
                 android:id="@+id/signup_surname"
+                android:background="@drawable/rectedittext"
+                android:layout_marginBottom="20dp"
                 android:singleLine="true"
                 android:inputType="textPersonName"
                 android:gravity="center"/>
-        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        <com.wrapp.floatlabelededittext.FloatLabeledEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/signin_username"
                 android:id="@+id/signup_username"
+                android:background="@drawable/rectedittext"
+                android:layout_marginBottom="20dp"
                 android:singleLine="true"
                 android:inputType="textPersonName"
                 android:gravity="center"/>
-        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        <com.wrapp.floatlabelededittext.FloatLabeledEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/signin_password"
                 android:id="@+id/signup_password"
+                android:background="@drawable/rectedittext"
+                android:layout_marginBottom="20dp"
                 android:singleLine="true"
                 android:inputType="textPassword"
                 android:gravity="center"/>
-        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        <com.dd.CircularProgressButton
+        <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/cpb_white"
+            android:background="@drawable/rectbutton"
             android:id="@+id/signup_bSignUp"
-            app:cpb_cornerRadius="24dp"
-            app:cpb_textIdle="@string/signin_signup"/>
+            android:text="@string/signin_signup"/>
     </LinearLayout>
 
-    <com.dd.CircularProgressButton
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:textColor="@color/colorAccent"
-        android:id="@+id/signup_bSignIn"
-        app:cpb_cornerRadius="24dp"
-        app:cpb_textIdle="@string/signin_signin"/>
+    <TextView
+        android:layout_below="@+id/signup_layout"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/cpb_white"
+        android:id="@+id/textSignIn"
+        android:text="@string/signin_signin"/>
 
 </RelativeLayout>

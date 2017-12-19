@@ -3,6 +3,7 @@ package com.igorpavinich.messenger;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,9 +66,14 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
         if(img!=null)
             imageView.setImageBitmap(dialogs.get(position).getPicture());
         else imageView.setImageResource(R.drawable.ic_mood_black_72dp);
-        if(dialogs.get(position).isUnread()) row.setBackgroundColor(Color.LTGRAY);
+        if(dialogs.get(position).isUnread()) {
+            row.setBackgroundColor(Color.LTGRAY);
+        }
         ImageView onlineImg = row.findViewById(R.id.onlineImg);
         if(dialogs.get(position).isOnline()) onlineImg.setVisibility(View.VISIBLE);
+        receiver.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "Roboto-Bold.ttf"));
+        date.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "Roboto-Regular.ttf"));
+        text.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "Roboto-Regular.ttf"));
         return row;
     }
 

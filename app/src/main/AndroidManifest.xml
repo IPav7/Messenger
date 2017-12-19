@@ -14,8 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SignIn_Activity" />
-        <activity android:name=".SignUp_Activity" />
+        <activity android:name=".SignIn_Activity"
+            android:theme="@style/SignTheme"/>
+        <activity android:name=".SignUp_Activity"
+            android:theme="@style/SignTheme" />
         <activity android:name=".DialogsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SearchActivity" />
+        <activity android:name=".SearchActivity"
+            android:theme="@style/CustomTheme"/>
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MessageActivity">
         </activity>

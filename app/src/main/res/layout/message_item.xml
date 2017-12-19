@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/mesText"
         android:textSize="26sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:fontFamily="monospace"
+        android:textColor="@color/darkGrey"
         />
 
     <TextView
@@ -18,12 +18,12 @@
         android:layout_below="@+id/mesText"
         android:id="@+id/mesTime"
         android:textSize="16sp"
-        android:fontFamily="monospace"/>
+        android:textColor="@color/grey"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:id="@+id/playSound"
-        android:src="@drawable/ic_music_note_black_24dp"
+        android:src="@drawable/icon_voice_start"
         android:visibility="gone"/>
 
 </RelativeLayout>

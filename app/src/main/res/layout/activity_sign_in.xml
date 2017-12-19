@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backsign"
     tools:context="com.igorpavinich.messenger.SignIn_Activity">
 
     <ProgressBar
@@ -12,58 +12,64 @@
         android:id="@+id/progressBar"
         android:layout_gravity="center"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcomeText"
+        android:text="@string/welcome"
+        android:textSize="70sp"
+        android:textColor="@color/cpb_white"
+        android:layout_marginBottom="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/signLayout"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:layout_centerInParent="true"
+        android:id="@+id/signLayout"
         android:orientation="vertical">
-         <com.wrapp.floatlabelededittext.FloatLabeledEditText
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
              <EditText
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:hint="@string/signin_username"
                  android:id="@+id/signin_username"
+                 android:background="@drawable/rectedittext"
+                 android:layout_marginBottom="20dp"
                  android:singleLine="true"
                  android:inputType="textPersonName"
                  android:gravity="center"/>
-         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/signin_password"
                     android:id="@+id/signin_password"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rectedittext"
                     android:singleLine="true"
                     android:inputType="textPassword"
                     android:gravity="center"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        <!--</LinearLayout>-->
-        <com.dd.CircularProgressButton
+        <Button
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:textColor="@color/colorAccent"
+            android:background="@drawable/rectbutton"
+            android:textColor="@color/cpb_white"
             android:id="@+id/signin_bSignIn"
-            app:cpb_cornerRadius="24dp"
-            app:cpb_textIdle="@string/signin_signin"/>
+            android:text="@string/signin_signin"/>
     </LinearLayout>
 
-    <com.dd.CircularProgressButton
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:textColor="@color/colorAccent"
-        android:id="@+id/signin_bSignUp"
-        app:cpb_cornerRadius="24dp"
-        app:cpb_textIdle="@string/signin_signup"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signLayout"
+        android:layout_marginTop="10dp"
+        android:text="@string/signin_signup"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/cpb_white"
+        android:id="@+id/signUpText"/>
+
+
 
 </RelativeLayout>

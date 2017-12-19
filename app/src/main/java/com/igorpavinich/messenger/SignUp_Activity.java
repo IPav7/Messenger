@@ -1,7 +1,9 @@
 package com.igorpavinich.messenger;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,10 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -26,22 +31,25 @@ import static com.igorpavinich.messenger.CheckInput.checkLogin;
 import static com.igorpavinich.messenger.CheckInput.checkName;
 import static com.igorpavinich.messenger.CheckInput.checkPassword;
 
-public class SignUp_Activity extends AppCompatActivity implements View.OnClickListener {
+public class SignUp_Activity extends Activity implements View.OnClickListener {
 
     ProgressBar progressBar;
     ImageView imageView;
-    Button bSignUp, bSignIn;
+    Button bSignUp;
     EditText etName, etSurname, etLogin, etPassword;
+    TextView textSignIn;
     boolean imageUpdated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sign_up);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
         imageView = findViewById(R.id.signup_image);
-        bSignIn = findViewById(R.id.signup_bSignIn);
         bSignUp = findViewById(R.id.signup_bSignUp);
         etName = findViewById(R.id.signup_name);
         etSurname = findViewById(R.id.signup_surname);
@@ -53,7 +61,9 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
         etPassword.addTextChangedListener(textWatcher);
         bSignUp.setOnClickListener(this);
         bSignUp.setEnabled(false);
-        bSignIn.setOnClickListener(this);
+        textSignIn = findViewById(R.id.textSignIn);
+        textSignIn.setTypeface(Typeface.createFromAsset(getAssets(), "Roboto-LightItalic.ttf"));
+        textSignIn.setOnClickListener(this);
         imageView.setOnClickListener(this);
     }
 
@@ -71,7 +81,7 @@ public class SignUp_Activity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.signup_bSignIn:
+            case R.id.textSignIn:
                 startActivity(new Intent(SignUp_Activity.this, SignIn_Activity.class));
                 break;
             case R.id.signup_bSignUp:

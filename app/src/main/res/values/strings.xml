@@ -15,4 +15,5 @@
     <string name="url">http://192.168.137.1:8080/mess/</string>
     <string name="refresh">Обновить</string>
     <string name="dialogs">Диалоги</string>
+    <string name="welcome">Welcome</string>
 </resources>

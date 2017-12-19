@@ -2,6 +2,7 @@ package com.igorpavinich.messenger;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class SearchAdapter extends BaseAdapter {
         View row = inflater.inflate(R.layout.user_item, viewGroup, false);
         TextView fullName = row.findViewById(R.id.user_name);
         fullName.setText(users.get(position).getSurname() + " " + users.get(position).getName());
+        fullName.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "Roboto-Bold.ttf"));
         ImageView imageView = row.findViewById(R.id.user_img);
         Bitmap img = users.get(position).getPicture();
         if(img!=null)

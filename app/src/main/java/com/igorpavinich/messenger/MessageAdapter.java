@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -72,14 +73,24 @@ public class MessageAdapter extends BaseAdapter {
         });
         RelativeLayout.LayoutParams params =
                 new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams layoutParams;
         if(messages.get(position).getSender().equals(CookiesWork.cookie)){
-            RelativeLayout.LayoutParams layoutParams =
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-            text.setLayoutParams(layoutParams);
-            img.setLayoutParams(layoutParams);
+            layoutParams.setMarginEnd(50);
+            text.setTextColor(Color.WHITE);
+            text.setBackgroundResource(R.drawable.rect);
             params.addRule(RelativeLayout.ALIGN_PARENT_END);
+            params.setMarginEnd(50);
+        }else{
+            layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
+            layoutParams.setMarginStart(50);
+            params.setMarginStart(50);
+            text.setBackgroundResource(R.drawable.rectwhite);
         }
+        text.setLayoutParams(layoutParams);
+        img.setLayoutParams(layoutParams);
         if(messages.get(position).getType().equals("text")) {
             params.addRule(RelativeLayout.BELOW, R.id.mesText);
             text.setText(messages.get(position).getMessage());
@@ -90,6 +101,8 @@ public class MessageAdapter extends BaseAdapter {
             img.setVisibility(View.VISIBLE);
         }
         date.setLayoutParams(params);
+        text.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "Roboto-Regular.ttf"));
+        date.setTypeface(Typeface.createFromAsset(mContext.getAssets(), "Roboto-Regular.ttf"));
             String hours = String.valueOf(data.getHours());
             String minutes = String.valueOf(data.getMinutes());
             if (data.getHours() < 10) hours = "0" + hours;

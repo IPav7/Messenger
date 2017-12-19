@@ -41,6 +41,7 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        setTitle("Поиск");
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
         users = new ArrayList<>();
@@ -60,8 +61,6 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        httpConnect.cancel(true);
-        getImage.cancel(true);
     }
 
     int code;
@@ -180,8 +179,6 @@ public class SearchActivity extends AppCompatActivity {
                     break;
                 case R.id.imgProfile:
                     startActivity(new Intent(SearchActivity.this, ProfileActivity.class));
-                    break;
-                case R.id.imgSearch:
                     break;
             }
         }

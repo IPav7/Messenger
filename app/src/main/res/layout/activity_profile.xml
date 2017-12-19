@@ -34,6 +34,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                app:borderWidth="0dp"
                 app:rippleColor="@color/colorPrimary"/>
             <android.support.design.widget.FloatingActionButton
                 android:layout_width="wrap_content"
@@ -45,6 +47,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                app:borderWidth="0dp"
                 app:rippleColor="@color/colorPrimary"/>
         </RelativeLayout>
         <LinearLayout
@@ -60,12 +64,15 @@
                 android:layout_width="wrap_content"
                 android:text="@string/name"
                 android:layout_weight="1"
+                android:textColor="@color/darkGrey"
                 android:gravity="left"
+                android:id="@+id/prName"
                 android:layout_height="wrap_content" />
             <TextView
                 android:layout_width="wrap_content"
                 android:id="@+id/profileName"
                 android:layout_weight="1"
+                android:textColor="@color/grey"
                 android:gravity="right"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -82,12 +89,15 @@
                 android:layout_width="wrap_content"
                 android:text="@string/surname"
                 android:layout_weight="1"
+                android:textColor="@color/darkGrey"
+                android:id="@+id/prSurname"
                 android:gravity="left"
                 android:layout_height="wrap_content" />
             <TextView
                 android:layout_width="wrap_content"
                 android:id="@+id/profileSurname"
                 android:layout_weight="1"
+                android:textColor="@color/grey"
                 android:gravity="right"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -104,12 +114,15 @@
                 android:layout_width="wrap_content"
                 android:text="@string/login"
                 android:layout_weight="1"
+                android:textColor="@color/darkGrey"
+                android:id="@+id/prLogin"
                 android:gravity="left"
                 android:layout_height="wrap_content" />
             <TextView
                 android:layout_width="wrap_content"
                 android:id="@+id/profileLogin"
                 android:layout_weight="1"
+                android:textColor="@color/grey"
                 android:gravity="right"
                 android:layout_height="wrap_content" />
         </LinearLayout>

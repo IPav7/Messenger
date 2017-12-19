@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         android:divider="@null"
         android:layout_weight="1"
-        android:background="@color/mess"
+        android:background="@drawable/background"
         android:id="@+id/listMessages"
         android:stackFromBottom="true"/>
   <!--  <ProgressBar
@@ -25,7 +25,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:background="@color/cpb_white"
+        android:background="@color/botBar"
         android:layout_height="wrap_content">
         <EditText
             android:layout_width="0dp"
@@ -40,13 +40,13 @@
             android:layout_weight="2"
             android:layout_height="match_parent"
             android:id="@+id/sendImg"
-            android:src="@drawable/ic_arrow_forward_black_24dp"/>
+            android:src="@drawable/icon_send"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent"
             android:id="@+id/sendSound"
-            android:src="@drawable/ic_music_note_black_24dp"/>
+            android:src="@drawable/icon_voice_start"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

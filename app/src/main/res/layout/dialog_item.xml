@@ -7,6 +7,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="72dp"
         android:layout_height="72dp"
+        android:layout_margin="10dp"
         android:id="@+id/item_img"
         android:scaleType="centerCrop"/>
     <LinearLayout
@@ -22,26 +23,26 @@
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:paddingTop="5dp"
+        android:paddingTop="15dp"
         android:fontFamily="monospace"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/darkGrey"
         android:id="@+id/dialog_receiver"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/dialog_receiver"
-            android:paddingTop="5dp"
+            android:paddingTop="15dp"
             android:src="@drawable/ic_phone_iphone_blue_24dp"
             android:visibility="invisible"
             android:id="@+id/onlineImg"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_alignParentBottom="true"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:maxLines="1"
-        android:paddingBottom="5dp"
+        android:paddingBottom="15dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/grey"
         android:id="@+id/dialog_lastMessage"/>
     </RelativeLayout>
         <TextView
@@ -49,8 +50,8 @@
             android:layout_weight="2"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="12sp"
+            android:textColor="@color/grey"
+            android:textSize="15sp"
             android:id="@+id/msgTime"/>
     </LinearLayout>
 </LinearLayout>

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.os.AsyncTask;
@@ -39,6 +40,7 @@ public class ProfileActivity extends Activity {
     ImageView imgSearch, imgMsg, imgProfile, profileImg;
     TextView profileName, profileSurname, profileLogin;
     FloatingActionButton fab, fabEdit;
+    TextView prName, prSurname, prLogin;
     String login;
     AlertDialog dialog;
 
@@ -54,7 +56,7 @@ public class ProfileActivity extends Activity {
         if(login == null)
             login = CookiesWork.cookie;
         if(!login.equals(CookiesWork.cookie))
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.icon_chat));
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.icon_chat_white));
         else {
             fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_person_outline_blue_24dp));
             fabEdit.setVisibility(View.VISIBLE);
@@ -68,9 +70,20 @@ public class ProfileActivity extends Activity {
         imgProfile.setOnClickListener(imgClickListener);
         imgSearch.setOnClickListener(imgClickListener);
         profileImg = findViewById(R.id.profileImg);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-MediumItalic.ttf");
         profileLogin = findViewById(R.id.profileLogin);
         profileName = findViewById(R.id.profileName);
         profileSurname = findViewById(R.id.profileSurname);
+        profileLogin.setTypeface(tf);
+        profileName.setTypeface(tf);
+        profileSurname.setTypeface(tf);
+        prName = findViewById(R.id.prName);
+        prSurname = findViewById(R.id.prSurname);
+        prLogin = findViewById(R.id.prLogin);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-Bold.ttf");
+        prName.setTypeface(typeface);
+        prSurname.setTypeface(typeface);
+        prLogin.setTypeface(typeface);
         getProfileImage = new GetProfileImage();
         getProfileImage.execute(login);
         getProfileInfo = new GetProfileInfo();

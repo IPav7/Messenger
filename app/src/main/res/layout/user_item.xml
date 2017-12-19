@@ -8,6 +8,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:id="@+id/user_img"
+        android:layout_margin="10dp"
         android:scaleType="centerCrop"/>
         <RelativeLayout
             android:layout_width="0dp"
@@ -17,10 +18,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:fontFamily="monospace"
                 android:paddingTop="5dp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/darkGrey"
                 android:id="@+id/user_name"/>
             <ImageView
                 android:layout_width="wrap_content"

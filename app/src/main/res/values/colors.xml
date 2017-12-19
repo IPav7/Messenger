@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#a75dea</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#583989</color>
     <color name="colorAccent">#FF4081</color>
     <color name="unread">#96dcf7</color>
     <color name="botBar">#f8f8f8</color>
     <color name="mess">#f9fafc</color>
+    <color name="grey">#666</color>
+    <color name="darkGrey">#434343</color>
+    <color name="toolbar">#583989</color>
+    <color name="green">#25ca6a</color>
 </resources>

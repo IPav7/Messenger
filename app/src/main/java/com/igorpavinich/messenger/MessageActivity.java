@@ -100,7 +100,7 @@ public class MessageActivity extends Activity {
                 startActivity(intent);
                 break;
             case R.id.refreshMessages:
-                Toast.makeText(MessageActivity.this, "pos: " + listView.getLastVisiblePosition() + " " + messages.size(), Toast.LENGTH_SHORT).show();
+                new HttpConnect().execute("false");
                 break;
         }
     }
@@ -124,7 +124,7 @@ public class MessageActivity extends Activity {
                     mediaRecorder.setOutputFile(fileName);
                     mediaRecorder.prepare();
                     mediaRecorder.start();
-                    sendSound.setImageResource(R.drawable.ic_music_stop_24dp);
+                    sendSound.setImageResource(R.drawable.icon_voice_stop);
                 } catch (Exception e) {
                 }
             }
@@ -132,7 +132,7 @@ public class MessageActivity extends Activity {
                 if (mediaRecorder != null) {
                     mediaRecorder.stop();
                 }
-                sendSound.setImageResource(R.drawable.ic_music_note_black_24dp);
+                sendSound.setImageResource(R.drawable.icon_voice_start);
                 new SendSound().execute();
             }
             recording = !recording;

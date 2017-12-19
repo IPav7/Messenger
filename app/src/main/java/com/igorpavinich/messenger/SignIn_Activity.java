@@ -2,14 +2,18 @@ package com.igorpavinich.messenger;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
@@ -25,12 +29,16 @@ public class SignIn_Activity extends Activity {
     ProgressBar progressBar;
     HttpConnect httpConnect;
     EditText etLogin, etPassword;
-    Button bSignIn, bSignUp;
+    Button bSignIn;
+    TextView textSignUp, textWelcome;
     CookieManager cookieManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sign_in);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
@@ -50,13 +58,17 @@ public class SignIn_Activity extends Activity {
                // signIn();
             }
         });
-        bSignUp = findViewById(R.id.signin_bSignUp);
-        bSignUp.setOnClickListener(new View.OnClickListener() {
+        textSignUp = findViewById(R.id.signUpText);
+        textSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SignIn_Activity.this, SignUp_Activity.class));
             }
         });
+        textWelcome = findViewById(R.id.welcomeText);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "Roboto-LightItalic.ttf");
+        textSignUp.setTypeface(typeface);
+        textWelcome.setTypeface(typeface);
     }
 
     @Override
@@ -73,14 +85,12 @@ public class SignIn_Activity extends Activity {
     protected void onPause() {
         super.onPause();
         CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
-        httpConnect.cancel(true);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
     }
-
 
     int code=0;
 
