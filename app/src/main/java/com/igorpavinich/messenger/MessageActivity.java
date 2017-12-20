@@ -2,6 +2,7 @@ package com.igorpavinich.messenger;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaFormat;
@@ -17,7 +18,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -44,14 +48,12 @@ import java.util.TimerTask;
 
 public class MessageActivity extends Activity {
 
-  //  ProgressBar progressBar;
-    HttpConnect httpConnect;
     Send send;
     ListView listView;
     ArrayList<Message> messages;
     MessageAdapter adapter;
     String second;
-    ImageView imgSearch, imgMsg, imgProfile, sendImg, sendSound;
+    ImageView imgSearch, imgMsg, imgProfile, sendImg, sendSound, sendSticker;
     EditText etMessage;
     private MediaRecorder mediaRecorder;
     String fileName;
@@ -61,6 +63,9 @@ public class MessageActivity extends Activity {
     Timer timer;
     boolean firstTime;
     TimerTask doAsynchronousTask;
+    GridView gridView;
+    ArrayList<Integer> items;
+    StickerAdapter stickerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +87,63 @@ public class MessageActivity extends Activity {
         sendImg = findViewById(R.id.sendImg);
         sendImg.setOnClickListener(sendMessage);
         sendSound = findViewById(R.id.sendSound);
+        sendSticker = findViewById(R.id.sendSticker);
         sendSound.setOnClickListener(sendSoundMessage);
+        sendSticker.setOnClickListener(showStickers);
         etMessage = findViewById(R.id.etMessage);
+        etMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                    if(gridView.isShown())
+                        gridView.setVisibility(View.GONE);
+            }
+        });
+        gridView = findViewById(R.id.gridView);
+        addStickerToGridView();
         firstTime = true;
         timer = new Timer();
         callAsynchronousTask();
+    }
+
+    private void addStickerToGridView() {
+        items = new ArrayList<Integer>(){{
+            add(R.drawable.sticker1);
+            add(R.drawable.sticker2);
+            add(R.drawable.sticker3);
+            add(R.drawable.sticker4);
+            add(R.drawable.sticker5);
+            add(R.drawable.sticker6);
+            add(R.drawable.sticker7);
+            add(R.drawable.sticker8);
+            add(R.drawable.sticker9);
+            add(R.drawable.sticker10);
+            add(R.drawable.sticker11);
+            add(R.drawable.sticker12);
+            add(R.drawable.sticker13);
+            add(R.drawable.sticker14);
+            add(R.drawable.sticker15);
+            add(R.drawable.sticker16);
+            add(R.drawable.sticker17);
+            add(R.drawable.sticker18);
+            add(R.drawable.sticker19);
+            add(R.drawable.sticker20);
+            add(R.drawable.sticker21);
+            add(R.drawable.sticker22);
+            add(R.drawable.sticker23);
+            add(R.drawable.sticker24);
+            add(R.drawable.sticker25);
+            add(R.drawable.sticker26);
+            add(R.drawable.sticker27);
+            add(R.drawable.sticker28);
+        }};
+        stickerAdapter = new StickerAdapter(items, R.layout.stickeritem, this);
+        gridView.setAdapter(stickerAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                new Send().execute(new Message(CookiesWork.cookie, second, String.valueOf(i+1), "sticker"));
+            }
+        });
     }
 
     protected void onClickToolbarMessages(View v){
@@ -102,6 +159,17 @@ public class MessageActivity extends Activity {
         }
     }
 
+    View.OnClickListener showStickers = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(gridView.isShown())
+            gridView.setVisibility(View.GONE);
+            else gridView.setVisibility(View.VISIBLE);
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    };
+
     View.OnClickListener sendSoundMessage = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -111,9 +179,9 @@ public class MessageActivity extends Activity {
                     releaseRecorder();
                     mediaRecorder = new MediaRecorder();
                     mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                    fileName = Environment.getExternalStorageDirectory() + "/bufrecord.3gpp";
+                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                    fileName = Environment.getExternalStorageDirectory() + "/bufrecord.mp3";
                     mediaRecorder.setOutputFile(fileName);
                     mediaRecorder.prepare();
                     mediaRecorder.start();
@@ -154,7 +222,7 @@ public class MessageActivity extends Activity {
                 connection = (HttpURLConnection)url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "video/3gpp");
+                connection.setRequestProperty("Content-Type", "audio/mp3");
                 connection.setRequestProperty("charset", "utf-8");
                 connection.setRequestProperty("Cookie", CookiesWork.cookie);
                 connection.setRequestProperty("Content-Length", Integer.toString(array.length));

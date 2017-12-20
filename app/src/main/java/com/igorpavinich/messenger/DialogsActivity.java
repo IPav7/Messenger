@@ -101,7 +101,6 @@ public class DialogsActivity extends Activity {
 
     int code;
     ArrayList<Dialog> bufDialogs;
-
     class HttpConnect extends AsyncTask<Void, Void, Void> {
 
         @Override

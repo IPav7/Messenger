@@ -40,10 +40,41 @@ public class MessageAdapter extends BaseAdapter {
     ArrayList<Message> messages;
     Context mContext;
     String fileName;
+    private ArrayList<Integer> stickers;
 
     public MessageAdapter(Context mContext, ArrayList<Message> messages) {
         this.mContext = mContext;
         this.messages = messages;
+        stickers = new ArrayList<Integer>(){{
+            add(R.drawable.sticker1);
+            add(R.drawable.sticker2);
+            add(R.drawable.sticker3);
+            add(R.drawable.sticker4);
+            add(R.drawable.sticker5);
+            add(R.drawable.sticker6);
+            add(R.drawable.sticker7);
+            add(R.drawable.sticker8);
+            add(R.drawable.sticker9);
+            add(R.drawable.sticker10);
+            add(R.drawable.sticker11);
+            add(R.drawable.sticker12);
+            add(R.drawable.sticker13);
+            add(R.drawable.sticker14);
+            add(R.drawable.sticker15);
+            add(R.drawable.sticker16);
+            add(R.drawable.sticker17);
+            add(R.drawable.sticker18);
+            add(R.drawable.sticker19);
+            add(R.drawable.sticker20);
+            add(R.drawable.sticker21);
+            add(R.drawable.sticker22);
+            add(R.drawable.sticker23);
+            add(R.drawable.sticker24);
+            add(R.drawable.sticker25);
+            add(R.drawable.sticker26);
+            add(R.drawable.sticker27);
+            add(R.drawable.sticker28);
+        }};
     }
 
     public int getCount() {
@@ -98,6 +129,9 @@ public class MessageAdapter extends BaseAdapter {
         else {
             text.setVisibility(View.GONE);
             params.addRule(RelativeLayout.BELOW, R.id.playSound);
+            if(messages.get(position).getType().equals("sticker"))
+                img.setImageResource(stickers.get(Integer.parseInt(messages.get(position).getMessage())-1));
+            else img.setImageResource(R.drawable.icon_voice_start);
             img.setVisibility(View.VISIBLE);
         }
         date.setLayoutParams(params);
@@ -118,7 +152,7 @@ public class MessageAdapter extends BaseAdapter {
             fileName = Environment.getExternalStorageDirectory() + "/record-"
                     + messages.get(position).getSender() +
                     "-" + messages.get(position).getReceiver() + "-" +
-                    String.valueOf(messages.get(position).getDate()/1000) + ".3gpp";
+                    String.valueOf(messages.get(position).getDate()/1000) + ".mp3";
             File file = new File(fileName);
             if(!file.exists())
                 new GetSound().execute(messages.get(position));
@@ -165,7 +199,7 @@ public class MessageAdapter extends BaseAdapter {
                 fileName = Environment.getExternalStorageDirectory() + "/record-"
                         + params[0].getSender() +
                         "-" + params[0].getReceiver() + "-" +
-                        String.valueOf(params[0].getDate()/1000) + ".3gpp";
+                        String.valueOf(params[0].getDate()/1000) + ".mp3";
                 File path = new File(fileName);
                 FileOutputStream fos;
                 try {

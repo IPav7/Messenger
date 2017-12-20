@@ -23,7 +23,6 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:id="@+id/playSound"
-        android:src="@drawable/icon_voice_start"
         android:visibility="gone"/>
 
 </RelativeLayout>
