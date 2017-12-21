@@ -118,6 +118,8 @@ public class SignUp_Activity extends Activity implements View.OnClickListener {
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
                 startActivity(new Intent(SignUp_Activity.this, DialogsActivity.class));
             }
+            else
+                Toast.makeText(SignUp_Activity.this, "Ошибка регистрации\nВозможно, логин уже занят", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.GONE);
         }
 

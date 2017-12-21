@@ -80,18 +80,15 @@ public class MessageActivity extends Activity {
         sendSound.setOnClickListener(sendSoundMessage);
         sendSticker.setOnClickListener(showStickers);
         etMessage = findViewById(R.id.etMessage);
-        etMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        etMessage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                    if(gridView.isShown())
-                        gridView.setVisibility(View.GONE);
+            public void onClick(View view) {
+                if(gridView.isShown())
+                    gridView.setVisibility(View.GONE);
             }
         });
         gridView = findViewById(R.id.gridView);
         addStickerToGridView();
-        firstTime = true;
-        timer = new Timer();
-        callAsynchronousTask();
     }
 
     private void addStickerToGridView() {
@@ -245,6 +242,13 @@ public class MessageActivity extends Activity {
     int code;
     ArrayList<Message> bufMessages;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firstTime = true;
+        timer = new Timer();
+        callAsynchronousTask();
+    }
 
     class Send extends AsyncTask<Message, Void, Void>{
 
@@ -308,7 +312,7 @@ public class MessageActivity extends Activity {
                         messages.add(message);
                     }
                 if(messages.size()==0)
-                    Toast.makeText(MessageActivity.this, "Сообщений нет\nНапишите первым", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MessageActivity.this, "Сообщений нет\nНапишите первым", Toast.LENGTH_SHORT).show();
                     adapter.notifyDataSetChanged();
             }
             else Toast.makeText(MessageActivity.this, "Ошибка соединения с сервером", Toast.LENGTH_SHORT).show();

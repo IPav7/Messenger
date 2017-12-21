@@ -64,7 +64,7 @@ public class DialogsAdapter extends BaseAdapter implements Filterable {
         ImageView imageView = row.findViewById(R.id.item_img);
         Bitmap img = dialogs.get(position).getPicture();
         if(img!=null)
-            imageView.setImageBitmap(dialogs.get(position).getPicture());
+            imageView.setImageBitmap(img);
         else imageView.setImageResource(R.drawable.ic_mood_black_72dp);
         if(dialogs.get(position).isUnread()) {
             row.setBackgroundColor(Color.LTGRAY);

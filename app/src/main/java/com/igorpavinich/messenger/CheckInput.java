@@ -8,7 +8,7 @@ public class CheckInput {
     static boolean checkLogin(String login){
         if(login.isEmpty())
             return false;
-        if(login.length() < 5 || login.length()>20)
+        if(login.length() < 3 || login.length()>20)
             return false;
         for(int i=0; i<login.length(); i++){
             if(!Character.isLetter(login.charAt(i)) && !Character.isDefined(login.charAt(i)))
@@ -20,7 +20,7 @@ public class CheckInput {
     static boolean checkPassword(String password){
         if(password.isEmpty())
             return false;
-        if(password.length() < 6 || password.length() > 20)
+        if(password.length() < 5 || password.length() > 20)
             return false;
         for(int i=0; i<password.length(); i++){
             if(!Character.isLetter(password.charAt(i)) && !Character.isDefined(password.charAt(i)))

@@ -16,8 +16,10 @@
         android:windowSoftInputMode="adjustResize"
         android:theme="@style/AppTheme">
         <activity android:name=".SignIn_Activity"
+            android:screenOrientation="portrait"
             android:theme="@style/SignTheme"/>
         <activity android:name=".SignUp_Activity"
+            android:screenOrientation="portrait"
             android:theme="@style/SignTheme" />
         <activity android:name=".DialogsActivity">
             <intent-filter>

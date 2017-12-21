@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
@@ -105,6 +106,7 @@ public class SignIn_Activity extends Activity {
                 CookiesWork.saveCookie(getSharedPreferences("SharPrefs", MODE_PRIVATE));
                 startActivity(new Intent(SignIn_Activity.this, DialogsActivity.class));
             }
+            else Toast.makeText(SignIn_Activity.this, "Ошибка входа", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.GONE);
         }
 
