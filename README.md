@@ -7,3 +7,4 @@
   * Live chat
    * Voice messages
     * Stickers
+     * Search
